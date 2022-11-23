@@ -64,8 +64,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
 
         ScheduleItemHeader header = new ScheduleItemHeader();
-
-        //SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
         header.setTitle(simpleDateFormat.format(date));
 
@@ -77,7 +75,7 @@ public class ScheduleActivity extends AppCompatActivity {
         item.setEnd("11:00");
         item.setType("Практическое задание");
         item.setName("Анализ данных (анг)");
-        item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+        item.setPlace("Ауд. 503, Кончовский пр-д, д.3 пощашопзшукозп укзпшкушпзкушзпозукпзоукзпозкуопзуокзпозкуопзшоук");
         item.setTeacher("Пред. Гущим Михаил Иванович");
         list.add(item);
 
