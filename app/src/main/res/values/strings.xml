@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Расписание занятий</string>
+    <string name="tt_students_b_ru">Расписание для студентов</string>
+    <string name="tt_teachers_b_ru">Расписание для преподавателей</string>
+    <string name="SelectTeacher">Выберите преподавателя:</string>
+    <string name="SelectGroup">Выберите группу:</string>
+    <string name="idTimeNow">Сейчас:</string>
+    <string name="idLessons">Идёт пара / Нет пар</string>
+    <string name="id_Subject">Дисциплина</string>
+    <string name="id_Cabinet">Кабинет</string>
+    <string name="id_Corpus">Корпус</string>
+    <string name="id_Teacher">Преподаватель</string>
+    <string name="id_day">Расписание\nна день</string>
+    <string name="id_week">Расписание\nна неделю</string>
+    <string name="Settings_id">Настройки</string>
+    <string name="Name_id">Укажите ваше имя</string>
+    <string name="Photo_id">Укажите фото:</string>
+    <string name="Light_id">Текущая освещенность:</string>
+    <string name="Photo">Сделать фото</string>
+    <string name="Save">Сохранить</string>
+    <string name="setName">Укажите ваше имя</string>
+    <string name="lightNow">текущая освещенность</string>
+    <string name="SelectPhoto">Укажите фото</string>
+    <string name="save">Сохранить</string>
+    <string name="takePhoto">Сделать фото</string>
+</resources>
