@@ -45,7 +45,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected TextView time;
     protected Date currentTime;
-    protected Date currentDate;
 
     private OkHttpClient client = new OkHttpClient();
 
@@ -73,7 +72,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         currentTime = dateTime;
-        currentDate = dateTime;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm,EEEE", Locale.forLanguageTag("ru"));
         time.setText(simpleDateFormat.format(currentTime));
     }

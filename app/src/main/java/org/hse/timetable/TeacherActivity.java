@@ -98,7 +98,6 @@ public class TeacherActivity extends BaseActivity
     protected void initTime()
     {
         currentTime = new Date();
-        currentDate = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
         java.util.TimeZone tz = TimeZone.getTimeZone(("GMT+3")); //часовой пояс Москвы
         simpleDateFormat.setTimeZone(tz);
@@ -216,7 +215,7 @@ public class TeacherActivity extends BaseActivity
         if (!(selectedItem instanceof StudentActivity.Group)) {
             return;
         }
-        showScheduleImpl(ScheduleMode.TEACHER, type, (StudentActivity.Group) selectedItem, currentDate);
+        showScheduleImpl(ScheduleMode.TEACHER, type, (StudentActivity.Group) selectedItem, currentTime);
     }
 
     protected void showScheduleImpl(ScheduleMode mode, ScheduleType type, StudentActivity.Group group, Date date){
