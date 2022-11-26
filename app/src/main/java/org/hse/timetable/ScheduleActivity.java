@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -55,38 +57,72 @@ public class ScheduleActivity extends AppCompatActivity {
 
 
 
-        initData();
+        initData(type);
     }
 
-    private void initData() {
+    private void initData(BaseActivity.ScheduleType type) {
         List<ScheduleItem> list = new ArrayList<>();
-
-
 
         ScheduleItemHeader header = new ScheduleItemHeader();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
         header.setTitle(simpleDateFormat.format(date));
 
-     //   header.setTitle("Понедельник, 28 января");
         list.add(header);
 
-        ScheduleItem item = new ScheduleItem();
-        item.setStart("10:00");
-        item.setEnd("11:00");
-        item.setType("Практическое задание");
-        item.setName("Анализ данных (анг)");
-        item.setPlace("Ауд. 503, Кончовский пр-д, д.3 пощашопзшукозп укзпшкушпзкушзпозукпзоукзпозкуопзуокзпозкуопзшоук");
-        item.setTeacher("Пред. Гущим Михаил Иванович");
-        list.add(item);
+        if (type == BaseActivity.ScheduleType.DAY){
 
-        item = new ScheduleItem();
-        item.setStart("12:00");
-        item.setEnd("13:00");
-        item.setType("Практическое задание");
-        item.setName("Анализ данных (анг)");
-        item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-        item.setTeacher("Пред. Гущим Михаил Иванович");
-        list.add(item);
+            ScheduleItem item = new ScheduleItem();
+            item.setStart("10:00");
+            item.setEnd("11:00");
+            item.setType("Практическое задание");
+            item.setName("Анализ данных (анг)");
+            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+            item.setTeacher("Пред. Гущим Михаил Иванович");
+            list.add(item);
+
+            item = new ScheduleItem();
+            item.setStart("12:00");
+            item.setEnd("13:00");
+            item.setType("Практическое задание");
+            item.setName("Анализ данных (анг)");
+            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+            item.setTeacher("Пред. Гущим Михаил Иванович");
+            list.add(item);
+        }else {
+
+            for (int i=1; i<=7; i++){
+                ScheduleItem item = new ScheduleItem();
+                item.setStart("10:00");
+                item.setEnd("11:00");
+                item.setType("Практическое задание");
+                item.setName("Анализ данных (анг)");
+                item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+                item.setTeacher("Пред. Гущим Михаил Иванович");
+                list.add(item);
+
+                ScheduleItemHeader header2 = new ScheduleItemHeader();
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+                header2.setTitle(simpleDateFormat2.format(date));
+
+                Date dateNext = (Date) date.clone();
+
+                Log.d("777",date.toString());
+                Calendar c = Calendar.getInstance();
+                c.setTime(dateNext);
+                c.add(Calendar.DATE, i);
+                dateNext = c.getTime();
+                Log.d("777",date.toString());
+                header2.setTitle(simpleDateFormat2.format(dateNext));
+                list.add(header2);
+
+            }
+
+
+
+
+        }
+
+
 
         adapter.setDataList(list);
 
@@ -117,12 +153,12 @@ public class ScheduleActivity extends AppCompatActivity {
             if (viewType == TYPE_ITEM){
 
                View contactView = inflater.inflate(R.layout.item_schedule, parent,false);
-                Log.d("777", "ha1");
+
                return new ViewHolder(contactView, context, onItemClick);
             } else if (viewType == TYPE_HEADER){
 
                 View contactView = inflater.inflate(R.layout.item_schedule_header, parent,false);
-                Log.d("777", "ha-1");
+
                 return new ViewHolderHeader(contactView, context, onItemClick);
 
             }
