@@ -6,7 +6,8 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import java.sql.Date;
+import java.util.Date;
+
 
 @Entity(tableName = "time_table", foreignKeys =
         {@ForeignKey(entity = GroupEntity.class, parentColumns = "id", childColumns = "group_id", onDelete = ForeignKey.CASCADE),

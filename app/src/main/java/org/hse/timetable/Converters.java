@@ -3,7 +3,7 @@ package org.hse.timetable;
 
 import androidx.room.TypeConverter;
 
-import java.sql.Date;
+import java.util.Date;
 
 
 public class Converters {
@@ -15,6 +15,6 @@ public class Converters {
 
     @TypeConverter
     public static Long dataToTimestamp(Date date){
-        return date == null ? null : new date.getTime();
+        return date == null ? null : date.getTime();
     }
 }
