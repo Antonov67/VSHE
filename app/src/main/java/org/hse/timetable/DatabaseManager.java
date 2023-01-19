@@ -75,6 +75,10 @@ public class DatabaseManager {
         teacher.id = 2;
         teacher.fio = "Петров2 Петр2 Петрович2";
         teachers.add(teacher);
+        teacher = new TeacherEntity();
+        teacher.id = 3;
+        teacher.fio = "Петров3 Петр3 Петрович3";
+        teachers.add(teacher);
         DatabaseManager.getInstance(context).getHseDao().insertTeacher(teachers);
 
         List<TimeTableEntity> timeTables = new ArrayList<>();

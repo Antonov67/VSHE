@@ -65,7 +65,6 @@ public class StudentActivity extends BaseActivity{
 
 
 
-
   static class Group
     {
         private Integer id;
@@ -125,7 +124,6 @@ public class StudentActivity extends BaseActivity{
 
         mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
         //mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
-        Log.d("777","test");
         spinner = findViewById(R.id.spinnerGroup);
 
 

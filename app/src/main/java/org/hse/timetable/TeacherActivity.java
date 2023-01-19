@@ -13,6 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,9 +23,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TeacherActivity extends BaseActivity
-{
+public class TeacherActivity extends BaseActivity{
+
     private TextView status, subject, cabinet, corp, teacher, time;
+
+    protected MainViewModel mainViewModel;
+
+    ArrayAdapter adapter;
 
     private Spinner spinner;
     Date currenttime;
@@ -114,14 +121,15 @@ public class TeacherActivity extends BaseActivity
         setContentView(R.layout.activity_teacher);
         //enumeration(_teacher,_teacher_number,empty);
 
+        mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
 
         spinner = findViewById(R.id.spinnerTeacher);
 
         List<StudentActivity.Group> groups = new ArrayList<>();
-        List<StudentActivity.Group> groups2 = initGroupList(groups, teachers);
-        //initGroupList(groups, teachers);
+        //List<StudentActivity.Group> groups2 = initGroupList(groups, teachers);
+        initGroupList(groups);
 
-        ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups2);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
@@ -186,13 +194,29 @@ public class TeacherActivity extends BaseActivity
 
 
 
-    private List<StudentActivity.Group> initGroupList(List<StudentActivity.Group> groups, StudentActivity.Group[] list)
-    {
-        for(StudentActivity.Group group: list)
-        {
-            groups.add(new StudentActivity.Group(group.getId(), group.getName()));
-        }
-        return groups;
+//    private List<StudentActivity.Group> initGroupList(List<StudentActivity.Group> groups, StudentActivity.Group[] list)
+//    {
+//        for(StudentActivity.Group group: list)
+//        {
+//            groups.add(new StudentActivity.Group(group.getId(), group.getName()));
+//        }
+//        return groups;
+//    }
+
+
+
+    private void initGroupList(List<StudentActivity.Group> groups){
+         mainViewModel.getTEachers().observe(this, new Observer<List<TeacherEntity>>() {
+             @Override
+             public void onChanged(List<TeacherEntity> list) {
+                 List<StudentActivity.Group> groupsResult = new ArrayList<>();
+                 for (TeacherEntity teacher: list) {
+                     groupsResult.add(new StudentActivity.Group(teacher.id, teacher.fio));
+                 }
+                 adapter.clear();
+                 adapter.addAll(groupsResult);
+             }
+         });
     }
 
     private  void initData()
