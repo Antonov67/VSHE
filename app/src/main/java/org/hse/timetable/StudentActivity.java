@@ -282,8 +282,26 @@ public class StudentActivity extends BaseActivity{
             @Override
             public void onChanged(List<TimeTableWithTeacherEntity> list) {
                 for (TimeTableWithTeacherEntity listEntity: list) {
-                    Log.d(TAG,listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio);
-                    initDataFromTimeTable(listEntity);
+                    Log.d(TAG,listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio + " " + listEntity.timeTableEntity.groupId);
+
+                    //запрос по дате и по group_id
+                    mainViewModel.getTimeTableGroupByIdAndDate(dateTime,listEntity.timeTableEntity.groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithGroupEntity>>() {
+                        @Override
+                        public void onChanged(List<TimeTableWithGroupEntity> group) {
+                            Log.d(TAG,group.get(0).groupEntity.id + "");
+                            if (group.get(0).groupEntity.id == listEntity.timeTableEntity.groupId){
+                                initDataFromTimeTable(listEntity);
+                            }else {
+                                initDataFromTimeTable(null);
+                            }
+
+                        }
+                    });
+
+
+
+
+
                 }
             }
         });

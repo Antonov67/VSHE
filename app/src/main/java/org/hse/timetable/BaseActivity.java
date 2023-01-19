@@ -73,6 +73,7 @@ public abstract class BaseActivity extends FragmentActivity {
         time.setText(simpleDateFormat.format(currentTime));
     }
 
+
     private void parseResponse(Response response){
         Gson gson = new Gson();
         ResponseBody body = response.body();

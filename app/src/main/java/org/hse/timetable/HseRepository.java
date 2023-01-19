@@ -29,4 +29,8 @@ public class HseRepository {
         return dao.getTimetableTeacherByDate(date);
     }
 
+    public LiveData<List<TimeTableWithGroupEntity>> getTimetableGroupByIdAndDate(Date date, int group) {
+        return dao.getTimetableGroupByIdAndDate(date, group);
+    }
+
 }
