@@ -10,6 +10,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
+import java.util.Date;
 import java.util.List;
 @Dao
 public interface HseDao {
@@ -38,6 +39,10 @@ public interface HseDao {
     @Transaction
     @Query("SELECT * FROM 'time_table'")
     LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacher();
+
+    @Transaction
+    @Query("SELECT * FROM 'time_table' WHERE :date >= time_start AND :date <= time_end")
+    LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacherByDate(Date date);
 
     @Insert
     void insertTimeTable(List<TimeTableEntity> data);

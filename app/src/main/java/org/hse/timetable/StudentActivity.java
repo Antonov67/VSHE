@@ -151,7 +151,7 @@ public class StudentActivity extends BaseActivity{
                 Log.d(TAG, "itemSelected " + item);
 
                 try {
-                    showTime(simpleDateFormat.parse("2023-02-01 13:00"));
+                    showTime(simpleDateFormat.parse("2021-02-01 13:00"));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

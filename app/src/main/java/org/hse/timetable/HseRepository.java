@@ -26,7 +26,7 @@ public class HseRepository {
     }
 
     public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDate(Date date){
-        return dao.getTimetableTeacher();
+        return dao.getTimetableTeacherByDate(date);
     }
 
 }
