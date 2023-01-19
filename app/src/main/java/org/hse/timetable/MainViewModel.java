@@ -23,7 +23,7 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getGroups();
     }
 
-    public LiveData<List<TeacherEntity>> getTEachers(){
+    public LiveData<List<TeacherEntity>> getTeachers(){
         return repository.getTeachers();
     }
 

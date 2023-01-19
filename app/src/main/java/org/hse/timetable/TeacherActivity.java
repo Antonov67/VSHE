@@ -206,7 +206,7 @@ public class TeacherActivity extends BaseActivity{
 
 
     private void initGroupList(List<StudentActivity.Group> groups){
-         mainViewModel.getTEachers().observe(this, new Observer<List<TeacherEntity>>() {
+         mainViewModel.getTeachers().observe(this, new Observer<List<TeacherEntity>>() {
              @Override
              public void onChanged(List<TeacherEntity> list) {
                  List<StudentActivity.Group> groupsResult = new ArrayList<>();

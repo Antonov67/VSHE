@@ -136,6 +136,8 @@ public class StudentActivity extends BaseActivity{
 
         spinner.setAdapter(adapter);
 
+        initTime();
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             //@Override
@@ -144,6 +146,9 @@ public class StudentActivity extends BaseActivity{
             {
                 Object item = adapter.getItem(selectedItemPosition);
                 Log.d(TAG, "itemSelected" + item);
+                Log.d(TAG, "currentTime" + currentTime);
+                showTime(currentTime);
+
             }
 
             //@Override
@@ -154,7 +159,7 @@ public class StudentActivity extends BaseActivity{
         });
 
         time = findViewById(R.id.id_tv_time_Student);
-        initTime();
+
 
         status = findViewById(R.id.textView4);
         subject = findViewById(R.id.textView5);
@@ -231,14 +236,49 @@ public class StudentActivity extends BaseActivity{
         time.setText(timeText);
     }
 
-    private  void initData()
-    {
-        status.setText("Нет пар");
+//    private  void initData()
+//    {
+//        status.setText("Нет пар");
+//
+//        subject.setText("Дисциплина");
+//        cabinet.setText("Кабинет");
+//        corp.setText("Корпус");
+//        teacher.setText("Преподаватель");
+//    }
 
-        subject.setText("Дисциплина");
-        cabinet.setText("Кабинет");
-        corp.setText("Корпус");
-        teacher.setText("Преподаватель");
+    private void initData(){
+        initDataFromTimeTable(null);
+    }
+
+    private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableTeacherEntity){
+        if (timeTableTeacherEntity == null){
+            status.setText("Нет пар");
+            subject.setText("Дисциплина");
+            cabinet.setText("Кабинет");
+            corp.setText("Корпус");
+            teacher.setText("Преподаватель");
+            return;
+        }
+        status.setText("Идет пара");
+        TimeTableEntity timeTableEntity = timeTableTeacherEntity.timeTableEntity;
+
+        subject.setText(timeTableEntity.subjName);
+        cabinet.setText(timeTableEntity.cabinet);
+        corp.setText(timeTableEntity.corp);
+        teacher.setText(timeTableTeacherEntity.teacherEntity.fio);
+    }
+
+    @Override
+    protected void showTime(Date dateTime) {
+        super.showTime(dateTime);
+        mainViewModel.getTimeTableTeacherByDate(dateTime).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
+            @Override
+            public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                for (TimeTableWithTeacherEntity listEntity: list) {
+                    Log.d(TAG,listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio);
+                }
+            }
+        });
     }
 
     private void toast(String text)
