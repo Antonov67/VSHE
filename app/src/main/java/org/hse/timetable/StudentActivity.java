@@ -18,7 +18,9 @@ import android.widget.Toast;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -145,9 +147,14 @@ public class StudentActivity extends BaseActivity{
                                        int selectedItemPosition, long selectedId)
             {
                 Object item = adapter.getItem(selectedItemPosition);
-                Log.d(TAG, "itemSelected" + item);
-                Log.d(TAG, "currentTime" + currentTime);
-                showTime(currentTime);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                Log.d(TAG, "itemSelected " + item);
+
+                try {
+                    showTime(simpleDateFormat.parse("2023-02-01 13:00"));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -270,12 +277,13 @@ public class StudentActivity extends BaseActivity{
 
     @Override
     protected void showTime(Date dateTime) {
-        super.showTime(dateTime);
+      //  super.showTime(dateTime);
         mainViewModel.getTimeTableTeacherByDate(dateTime).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
             @Override
             public void onChanged(List<TimeTableWithTeacherEntity> list) {
                 for (TimeTableWithTeacherEntity listEntity: list) {
                     Log.d(TAG,listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio);
+                    initDataFromTimeTable(listEntity);
                 }
             }
         });
