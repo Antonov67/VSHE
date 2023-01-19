@@ -34,7 +34,7 @@ public class StudentActivity extends BaseActivity{
 
     protected MainViewModel mainViewModel;
 
-    ArrayAdapter<?> adapter;
+    ArrayAdapter adapter;
 
     String[] course = {"БИ","ПИ","Э","УБ","И","Ю","МБ","РИС","ИЯ"};
     int[] year = {19,20,21,22};
@@ -215,7 +215,7 @@ public class StudentActivity extends BaseActivity{
                     groupResult.add(new Group(groupEntity.id, groupEntity.name));
                 }
                 adapter.clear();
-                //adapter.addAll(groupResult);
+                adapter.addAll(groupResult);
             }
 
         });

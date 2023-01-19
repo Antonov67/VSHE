@@ -60,6 +60,10 @@ public class DatabaseManager {
         group.id = 2;
         group.name = "Группа-18-2";
         groups.add(group);
+        group = new GroupEntity();
+        group.id = 3;
+        group.name = "Группа-18-3";
+        groups.add(group);
         DatabaseManager.getInstance(context).getHseDao().insertGroup(groups);
 
         List<TeacherEntity> teachers = new ArrayList<>();
