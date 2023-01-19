@@ -108,6 +108,20 @@ public class DatabaseManager {
         timeTable.teacherId = 2;
         timeTables.add(timeTable);
         DatabaseManager.getInstance(context).getHseDao().insertTimeTable(timeTables);
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 3;
+        timeTable.cabinet = "Кабинет 3";
+        timeTable.subGroup = "ПИ-2";
+        timeTable.subjName = "Мобильная разработка";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-01 13:00");
+        timeTable.timeEnd = dateFromString("2021-02-01 15:00");
+        timeTable.groupId = 2;
+        timeTable.teacherId = 3;
+        timeTables.add(timeTable);
+        DatabaseManager.getInstance(context).getHseDao().insertTimeTable(timeTables);
     }
 
     private Date dateFromString(String val){

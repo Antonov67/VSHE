@@ -278,6 +278,8 @@ public class StudentActivity extends BaseActivity{
     @Override
     protected void showTime(Date dateTime) {
       //  super.showTime(dateTime);
+
+
         mainViewModel.getTimeTableTeacherByDate(dateTime).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
             @Override
             public void onChanged(List<TimeTableWithTeacherEntity> list) {
