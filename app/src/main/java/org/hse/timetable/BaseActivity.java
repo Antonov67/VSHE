@@ -1,8 +1,8 @@
 package org.hse.timetable;
 
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
+import androidx.fragment.app.FragmentActivity;
+
 import android.util.Log;
 import android.widget.TextView;
 
@@ -24,7 +24,7 @@ import okhttp3.ResponseBody;
 
 
 
-public abstract class BaseActivity extends Activity {
+public abstract class BaseActivity extends FragmentActivity {
 
     enum ScheduleType{
         DAY,

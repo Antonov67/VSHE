@@ -14,10 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import androidx.lifecycle.LifecycleOwner;
+
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelStoreOwner;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -123,9 +122,10 @@ public class StudentActivity extends BaseActivity{
         time = findViewById(R.id.id_tv_time_Student);
 
         //
-        mainViewModel = new ViewModelProvider((ViewModelStoreOwner) this, (ViewModelProvider.Factory) new MainViewModelFactory(getApplication())).get(MainViewModel.class);
-        //mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
+        mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
+        //mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        Log.d("777","test");
         spinner = findViewById(R.id.spinnerGroup);
 
 
@@ -215,7 +215,7 @@ public class StudentActivity extends BaseActivity{
                     groupResult.add(new Group(groupEntity.id, groupEntity.name));
                 }
                 adapter.clear();
-                adapter.addAll(groupResult);
+                //adapter.addAll(groupResult);
             }
 
         });
