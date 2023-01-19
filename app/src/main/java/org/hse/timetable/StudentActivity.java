@@ -2,6 +2,7 @@ package org.hse.timetable;
 
 import static android.content.ContentValues.TAG;
 
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,11 +26,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class StudentActivity extends BaseActivity
-{
+public class StudentActivity extends BaseActivity{
+
+
     private TextView status, subject, cabinet, corp, teacher, time;
 
     private Spinner spinner;
+
+    protected MainViewModel mainViewModel;
+
+    ArrayAdapter<?> adapter;
 
     String[] course = {"БИ","ПИ","Э","УБ","И","Ю","МБ","РИС","ИЯ"};
     int[] year = {19,20,21,22};
@@ -110,13 +122,18 @@ public class StudentActivity extends BaseActivity
         enumeration(course,year,groupNumber);
         time = findViewById(R.id.id_tv_time_Student);
 
-       spinner = findViewById(R.id.spinnerGroup);
+        //
+        mainViewModel = new ViewModelProvider((ViewModelStoreOwner) this, (ViewModelProvider.Factory) new MainViewModelFactory(getApplication())).get(MainViewModel.class);
+        //mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
+        spinner = findViewById(R.id.spinnerGroup);
 
 
         List<Group> groups = new ArrayList<>();
-        initGroupList(groups, mock);
+       // initGroupList(groups, mock);
+        initGroupList(groups);
 
-        ArrayAdapter<?> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner.setAdapter(adapter);
@@ -180,12 +197,28 @@ public class StudentActivity extends BaseActivity
 
 
 
-    private void initGroupList(List<StudentActivity.Group> groups, List<StudentActivity.Group> list)
-    {
-        for(StudentActivity.Group group: list)
-        {
-            groups.add(new StudentActivity.Group(group.getId(), group.getName()));
-        }
+//    private void initGroupList(List<StudentActivity.Group> groups, List<StudentActivity.Group> list)
+//    {
+//        for(StudentActivity.Group group: list)
+//        {
+//            groups.add(new StudentActivity.Group(group.getId(), group.getName()));
+//        }
+//    }
+
+
+    private void initGroupList(final List<Group> groups){
+        mainViewModel.getGroups().observe(this, new Observer<List<GroupEntity>>() {
+            @Override
+            public void onChanged(List<GroupEntity> list) {
+                List<Group> groupResult = new ArrayList<>();
+                for (GroupEntity groupEntity : list){
+                    groupResult.add(new Group(groupEntity.id, groupEntity.name));
+                }
+                adapter.clear();
+                adapter.addAll(groupResult);
+            }
+
+        });
     }
 
     @Override

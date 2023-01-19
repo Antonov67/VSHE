@@ -1,5 +1,8 @@
 package org.hse.timetable;
 
+
+
+
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,12 +11,11 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import java.util.List;
-
 @Dao
 public interface HseDao {
 
-    @Query("SELECT * FROM 'group'")
-    LiveData<List<GroupEntity>> getAllGroup();
+   @Query("SELECT * FROM 'group'")
+   LiveData<List<GroupEntity>> getAllGroup();
 
     @Insert
     void insertGroup(List<GroupEntity> data);

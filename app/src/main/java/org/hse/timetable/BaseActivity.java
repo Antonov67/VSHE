@@ -2,13 +2,11 @@ package org.hse.timetable;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Bundle;
+import android.app.Activity;
 import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -26,7 +24,7 @@ import okhttp3.ResponseBody;
 
 
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends Activity {
 
     enum ScheduleType{
         DAY,
