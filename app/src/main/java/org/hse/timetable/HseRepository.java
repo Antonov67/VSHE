@@ -26,13 +26,10 @@ public class HseRepository {
         return dao.getAllTeacher();
     }
 
-    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDate(Date date){
-        return dao.getTimetableTeacherByDate(date);
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDate(Date date, int group){
+        return dao.getTimetableTeacherByDateAndGroupID(date, group);
     }
 
-    public LiveData<List<TimeTableWithGroupEntity>> getTimetableGroupByIdAndDate(Date date, int group) {
-        return dao.getTimetableGroupByIdAndDate(date, group);
-    }
 
     //поиск id группы по названию группы
     public LiveData<List<GroupEntity>> getGroupByName(String groupName){

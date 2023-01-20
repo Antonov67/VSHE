@@ -36,7 +36,7 @@ public class StudentActivity extends BaseActivity{
 
     protected MainViewModel mainViewModel;
 
-    private static int group_id = 0;
+    private static int groupId = 0;
 
 
     ArrayAdapter adapter;
@@ -150,6 +150,16 @@ public class StudentActivity extends BaseActivity{
                                        int selectedItemPosition, long selectedId)
             {
                 Object item = adapter.getItem(selectedItemPosition);
+                Log.d(TAG,"item: " + item);
+                mainViewModel.getGroupByName(item + "").observe(StudentActivity.this, new Observer<List<GroupEntity>>() {
+                    @Override
+                    public void onChanged(List<GroupEntity> list) {
+                        for (GroupEntity groupEntity: list) {
+                            groupId = groupEntity.id;
+                            Log.d(TAG,"groupId: " + groupId);
+                        }
+                    }
+                });
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                 Log.d(TAG, "itemSelected " + item);
 
@@ -283,27 +293,19 @@ public class StudentActivity extends BaseActivity{
       //  super.showTime(dateTime);
 
 
-        mainViewModel.getTimeTableGroupByIdAndDate(dateTime,group_id).observe(this, new Observer<List<TimeTableWithGroupEntity>>() {
+        mainViewModel.getTimeTableTeacherByDateAndGroupId(dateTime,groupId).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
             @Override
-            public void onChanged(List<TimeTableWithGroupEntity> list) {
-                for (TimeTableWithGroupEntity groupEntity: list) {
-                    Log.d(TAG,groupEntity.timeTableEntity.subjName + " " + groupEntity.groupEntity.name + " " + groupEntity.timeTableEntity.groupId);
+            public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                if (list.size() == 0){
+                    initDataFromTimeTable(null);
+                }else{
+                    for (TimeTableWithTeacherEntity teacherEntity: list) {
+                        Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
 
-                    //запрос по дате и по group_id
-//                    mainViewModel.getTimeTableGroupByIdAndDate(dateTime,listEntity.timeTableEntity.groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithGroupEntity>>() {
-//                        @Override
-//                        public void onChanged(List<TimeTableWithGroupEntity> group) {
-//                            Log.d(TAG,group.get(0).groupEntity.id + "");
-//                            if (group.get(0).groupEntity.id == listEntity.timeTableEntity.groupId){
-//                                initDataFromTimeTable(listEntity);
-//                            }else {
-//                                initDataFromTimeTable(null);
-//                            }
-//
-//                        }
-//                    });
-
+                        initDataFromTimeTable(teacherEntity);
+                    }
                 }
+
             }
         });
     }

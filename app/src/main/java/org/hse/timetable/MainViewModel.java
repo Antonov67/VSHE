@@ -27,13 +27,10 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getTeachers();
     }
 
-    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDate(Date date) {
-        return repository.getTimeTableTeacherByDate(date);
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherByDateAndGroupId(Date date, int group) {
+        return repository.getTimeTableTeacherByDate(date, group);
     }
 
-    public LiveData<List<TimeTableWithGroupEntity>> getTimeTableGroupByIdAndDate(Date date, int group){
-        return repository.getTimetableGroupByIdAndDate(date, group);
-    };
 
     //поиск id группы по названию группы
     public LiveData<List<GroupEntity>> getGroupByName(String groupName){
