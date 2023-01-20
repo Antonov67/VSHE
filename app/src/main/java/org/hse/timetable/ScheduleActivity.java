@@ -1,7 +1,11 @@
 package org.hse.timetable;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +37,8 @@ public class ScheduleActivity extends AppCompatActivity {
     ItemAdapter adapter;
     Date date;
 
+    protected MainViewModel mainViewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,12 +48,12 @@ public class ScheduleActivity extends AppCompatActivity {
         BaseActivity.ScheduleType type = (BaseActivity.ScheduleType) getIntent().getSerializableExtra(ARG_TYPE);
         BaseActivity.ScheduleMode mode = (BaseActivity.ScheduleMode) getIntent().getSerializableExtra(ARG_MODE);
         date = (Date) getIntent().getSerializableExtra(ARG_DATE);
-        int id = getIntent().getIntExtra(ARG_ID, DEFAULT_ID);
+        String id = getIntent().getStringExtra(ARG_ID);
 
         TextView title = findViewById(R.id.main_title);
-        title.setText(mode + " №" + id + " on " + type);
+        title.setText("Schedule " + " " + id + " on " + type);
 
-
+        mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
 
         recyclerView = findViewById(R.id.list_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -71,23 +77,59 @@ public class ScheduleActivity extends AppCompatActivity {
 
         if (type == BaseActivity.ScheduleType.DAY){
 
-            ScheduleItem item = new ScheduleItem();
-            item.setStart("10:00");
-            item.setEnd("11:00");
-            item.setType("Практическое задание");
-            item.setName("Анализ данных (анг)");
-            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-            item.setTeacher("Пред. Гущим Михаил Иванович");
-            list.add(item);
+//            ScheduleItem item = new ScheduleItem();
+//            item.setStart("10:00");
+//            item.setEnd("11:00");
+//            item.setType("Практическое задание");
+//            item.setName("Анализ данных (анг)");
+//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+//            item.setTeacher("Пред. Гущим Михаил Иванович");
+//            list.add(item);
+//
+//            item = new ScheduleItem();
+//            item.setStart("12:00");
+//            item.setEnd("13:00");
+//            item.setType("Практическое задание");
+//            item.setName("Анализ данных (анг)");
+//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+//            item.setTeacher("Пред. Гущим Михаил Иванович");
+//            list.add(item);
 
-            item = new ScheduleItem();
-            item.setStart("12:00");
-            item.setEnd("13:00");
-            item.setType("Практическое задание");
-            item.setName("Анализ данных (анг)");
-            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-            item.setTeacher("Пред. Гущим Михаил Иванович");
-            list.add(item);
+            mainViewModel.getGroupByName(groupNameOrTeacher[0]).observe(StudentActivity.this, new Observer<List<GroupEntity>>() {
+                @Override
+                public void onChanged(List<GroupEntity> list) {
+                    for (GroupEntity groupEntity: list) {
+                        groupId = groupEntity.id;
+                        Log.d(TAG,"groupId: " + groupId);
+                    }
+
+                    Log.d(TAG, "inGroupID: " + groupId);
+
+
+
+                    mainViewModel.getTimeTableTeacherByDateAndGroupId(dateTime,groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                        @Override
+                        public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                            if (list.size() == 0){
+                                initDataFromTimeTable(null);
+                            }else{
+                                for (TimeTableWithTeacherEntity teacherEntity: list) {
+                                    Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
+
+                                    initDataFromTimeTable(teacherEntity);
+                                }
+                            }
+
+                        }
+                    });
+
+
+                }
+            });
+
+
+
+
         }else {
 
             for (int i=1; i<=7; i++){

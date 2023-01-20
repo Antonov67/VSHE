@@ -46,4 +46,9 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getTimetableTeacherByDateAndTeacherID(date, teacherId);
     };
 
+    //расписание на текущий день для группы по id и дню
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableGroupOnDay(Date date, int group){
+        return repository.getTimeTableGroupOnDay(date,group);
+    };
+
 }

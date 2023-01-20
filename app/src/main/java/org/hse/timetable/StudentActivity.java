@@ -337,10 +337,16 @@ public class StudentActivity extends BaseActivity{
 
     protected void showScheduleImpl(ScheduleMode mode, ScheduleType type, Group group, Date date){
         Intent intent = new Intent(this, ScheduleActivity.class);
-        intent.putExtra(ScheduleActivity.ARG_ID, group.getId());
+        intent.putExtra(ScheduleActivity.ARG_ID, group.getName());
         intent.putExtra(ScheduleActivity.ARG_TYPE, type);
         intent.putExtra(ScheduleActivity.ARG_MODE, mode);
-        intent.putExtra(ScheduleActivity.ARG_DATE, date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        try {
+            intent.putExtra(ScheduleActivity.ARG_DATE, simpleDateFormat.parse("2021-02-01 16:00"));
+        }catch (Exception e){
+
+        }
+
         startActivity(intent);
     }
 

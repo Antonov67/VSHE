@@ -313,18 +313,20 @@ public class TeacherActivity extends BaseActivity{
 
     private void showSchedule(ScheduleType type){
         Object selectedItem = spinner.getSelectedItem();
-        if (!(selectedItem instanceof StudentActivity.Group)) {
-            return;
-        }
-        showScheduleImpl(ScheduleMode.TEACHER, type, (StudentActivity.Group) selectedItem, currentTime);
+        showScheduleImpl(ScheduleMode.TEACHER, type, selectedItem + "", currentTime);
     }
 
-    protected void showScheduleImpl(ScheduleMode mode, ScheduleType type, StudentActivity.Group group, Date date){
+    protected void showScheduleImpl(ScheduleMode mode, ScheduleType type, String teacher, Date date){
         Intent intent = new Intent(this, ScheduleActivity.class);
-        intent.putExtra(ScheduleActivity.ARG_ID, group.getId());
+        intent.putExtra(ScheduleActivity.ARG_ID, teacher);
         intent.putExtra(ScheduleActivity.ARG_TYPE, type);
         intent.putExtra(ScheduleActivity.ARG_MODE, mode);
-        intent.putExtra(ScheduleActivity.ARG_DATE, date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        try {
+            intent.putExtra(ScheduleActivity.ARG_DATE, simpleDateFormat.parse("2021-02-01 16:00"));
+        }catch (Exception e){
+
+        }
         startActivity(intent);
     }
 

@@ -54,6 +54,12 @@ public interface HseDao {
     @Query("SELECT * FROM 'group' WHERE name = :groupName")
     LiveData<List<GroupEntity>> getGroupByName(String groupName);
 
+    //расписание на текущий день для группы по id и дню
+    @Transaction
+    @Query("SELECT * FROM 'time_table' WHERE group_id = :group AND CONVERT(:date,GETDATE()) = CONVERT(time_end,GETDATE())")
+    LiveData<List<TimeTableWithTeacherEntity>> getTimeTableGroupOnDay(Date date, int group);
+
+
     //поиск id группы по fio учителя
     @Query("SELECT * FROM 'teacher' WHERE fio = :teacherFIO")
     LiveData<List<TeacherEntity>> getTeacherByFIO(String teacherFIO);
