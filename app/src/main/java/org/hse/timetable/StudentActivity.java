@@ -158,16 +158,42 @@ public class StudentActivity extends BaseActivity{
                             groupId = groupEntity.id;
                             Log.d(TAG,"groupId: " + groupId);
                         }
+
+                        Log.d(TAG, "inGroupID: " + groupId);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                        Date date = null;
+                        try {
+                            date = simpleDateFormat.parse("2021-02-01 16:00");
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        mainViewModel.getTimeTableTeacherByDateAndGroupId(date,groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                            @Override
+                            public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                                if (list.size() == 0){
+                                    initDataFromTimeTable(null);
+                                }else{
+                                    for (TimeTableWithTeacherEntity teacherEntity: list) {
+                                        Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
+
+                                        initDataFromTimeTable(teacherEntity);
+                                    }
+                                }
+
+                            }
+                        });
+
+
                     }
                 });
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+
                 Log.d(TAG, "itemSelected " + item);
 
-                try {
-                    showTime(simpleDateFormat.parse("2021-02-01 16:00"));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    showTime(simpleDateFormat.parse("2021-02-01 16:00"));
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
 
             }
 
@@ -293,21 +319,6 @@ public class StudentActivity extends BaseActivity{
       //  super.showTime(dateTime);
 
 
-        mainViewModel.getTimeTableTeacherByDateAndGroupId(dateTime,groupId).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
-            @Override
-            public void onChanged(List<TimeTableWithTeacherEntity> list) {
-                if (list.size() == 0){
-                    initDataFromTimeTable(null);
-                }else{
-                    for (TimeTableWithTeacherEntity teacherEntity: list) {
-                        Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
-
-                        initDataFromTimeTable(teacherEntity);
-                    }
-                }
-
-            }
-        });
     }
 
     private void toast(String text)
