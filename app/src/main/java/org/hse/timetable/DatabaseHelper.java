@@ -10,7 +10,7 @@ version = 1,
 exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class DatabaseHelper extends RoomDatabase {
-    public static final String DATABASE_NAME = "hse_timerable5";
+    public static final String DATABASE_NAME = "hse_timerable14";
 
     public abstract HseDao hseDao();
 }

@@ -151,7 +151,7 @@ public class StudentActivity extends BaseActivity{
                 Log.d(TAG, "itemSelected " + item);
 
                 try {
-                    showTime(simpleDateFormat.parse("2021-02-01 13:00"));
+                    showTime(simpleDateFormat.parse("2021-02-01 16:00"));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -285,24 +285,21 @@ public class StudentActivity extends BaseActivity{
             public void onChanged(List<TimeTableWithTeacherEntity> list) {
                 for (TimeTableWithTeacherEntity listEntity: list) {
                     Log.d(TAG,listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio + " " + listEntity.timeTableEntity.groupId);
+                    Log.d(TAG, listEntity.timeTableEntity.teacherId + "");
 
                     //запрос по дате и по group_id
-                    mainViewModel.getTimeTableGroupByIdAndDate(dateTime,listEntity.timeTableEntity.groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithGroupEntity>>() {
-                        @Override
-                        public void onChanged(List<TimeTableWithGroupEntity> group) {
-                            Log.d(TAG,group.get(0).groupEntity.id + "");
-                            if (group.get(0).groupEntity.id == listEntity.timeTableEntity.groupId){
-                                initDataFromTimeTable(listEntity);
-                            }else {
-                                initDataFromTimeTable(null);
-                            }
-
-                        }
-                    });
-
-
-
-
+//                    mainViewModel.getTimeTableGroupByIdAndDate(dateTime,listEntity.timeTableEntity.groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithGroupEntity>>() {
+//                        @Override
+//                        public void onChanged(List<TimeTableWithGroupEntity> group) {
+//                            Log.d(TAG,group.get(0).groupEntity.id + "");
+//                            if (group.get(0).groupEntity.id == listEntity.timeTableEntity.groupId){
+//                                initDataFromTimeTable(listEntity);
+//                            }else {
+//                                initDataFromTimeTable(null);
+//                            }
+//
+//                        }
+//                    });
 
                 }
             }

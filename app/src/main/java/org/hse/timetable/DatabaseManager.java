@@ -64,6 +64,10 @@ public class DatabaseManager {
         group.id = 3;
         group.name = "Группа-18-3";
         groups.add(group);
+        group = new GroupEntity();
+        group.id = 4;
+        group.name = "Группа-18-4";
+        groups.add(group);
         DatabaseManager.getInstance(context).getHseDao().insertGroup(groups);
 
         List<TeacherEntity> teachers = new ArrayList<>();
@@ -73,11 +77,15 @@ public class DatabaseManager {
         teachers.add(teacher);
         teacher = new TeacherEntity();
         teacher.id = 2;
-        teacher.fio = "Петров2 Петр2 Петрович2";
+        teacher.fio = "Степанов Степан Степанович";
         teachers.add(teacher);
         teacher = new TeacherEntity();
         teacher.id = 3;
-        teacher.fio = "Петров3 Петр3 Петрович3";
+        teacher.fio = "Сидоров Сидор Сидорович";
+        teachers.add(teacher);
+        teacher = new TeacherEntity();
+        teacher.id = 4;
+        teacher.fio = "Иванов Иван Иванович";
         teachers.add(teacher);
         DatabaseManager.getInstance(context).getHseDao().insertTeacher(teachers);
 
@@ -86,7 +94,7 @@ public class DatabaseManager {
         timeTable.id = 1;
         timeTable.cabinet = "Кабинет 1";
         timeTable.subGroup = "ПИ";
-        timeTable.subjName = "Философия";
+        timeTable.subjName = "Философия2";
         timeTable.corp = "К1";
         timeTable.type = 0;
         timeTable.timeStart = dateFromString("2021-02-01 10:00");
@@ -99,7 +107,7 @@ public class DatabaseManager {
         timeTable.id = 2;
         timeTable.cabinet = "Кабинет 2";
         timeTable.subGroup = "ПИ";
-        timeTable.subjName = "Мобильная разработка";
+        timeTable.subjName = "Мобильная разработка2";
         timeTable.corp = "К1";
         timeTable.type = 0;
         timeTable.timeStart = dateFromString("2021-02-01 13:00");
@@ -107,19 +115,33 @@ public class DatabaseManager {
         timeTable.groupId = 1;
         timeTable.teacherId = 2;
         timeTables.add(timeTable);
-        DatabaseManager.getInstance(context).getHseDao().insertTimeTable(timeTables);
+
 
         timeTable = new TimeTableEntity();
         timeTable.id = 3;
         timeTable.cabinet = "Кабинет 3";
-        timeTable.subGroup = "ПИ-2";
-        timeTable.subjName = "Мобильная разработка";
+        timeTable.subGroup = "ПИ-3";
+        timeTable.subjName = "Мобильная разработка3";
         timeTable.corp = "К1";
         timeTable.type = 0;
-        timeTable.timeStart = dateFromString("2021-02-01 13:00");
-        timeTable.timeEnd = dateFromString("2021-02-01 15:00");
+        timeTable.timeStart = dateFromString("2021-02-01 16:00");
+        timeTable.timeEnd = dateFromString("2021-02-01 18:00");
         timeTable.groupId = 2;
         timeTable.teacherId = 3;
+        timeTables.add(timeTable);
+
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 4;
+        timeTable.cabinet = "Кабинет 4";
+        timeTable.subGroup = "ПИ-4";
+        timeTable.subjName = "Философия4";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-01 16:00");
+        timeTable.timeEnd = dateFromString("2021-02-01 18:00");
+        timeTable.groupId = 3;
+        timeTable.teacherId = 4;
         timeTables.add(timeTable);
         DatabaseManager.getInstance(context).getHseDao().insertTimeTable(timeTables);
     }
