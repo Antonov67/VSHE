@@ -120,6 +120,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         c.add(Calendar.DATE, 1);
                         finishDate = c.getTime();
                         Log.d(TAG,startDate + " " + finishDate);
+
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -161,6 +162,25 @@ public class ScheduleActivity extends AppCompatActivity {
             });
 
         }else {
+
+            Date startDate = null, finishDate = null;
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            Calendar c = Calendar.getInstance();
+
+            try {
+                startDate = formatter.parse(formatter.format(date));
+                c.setTime(startDate);
+                Log.d(TAG,startDate + " " + finishDate);
+                //дней до конца недели
+                int delta = c.get(Calendar.DAY_OF_WEEK);
+                Log.d(TAG,"delta " + delta);
+                c.add(Calendar.DATE, delta);
+                finishDate = c.getTime();
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
 //            for (int i=1; i<=7; i++){
 //                ScheduleItem item = new ScheduleItem();
