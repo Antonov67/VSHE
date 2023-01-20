@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -110,11 +111,21 @@ public class ScheduleActivity extends AppCompatActivity {
                     Log.d(TAG,"schedule/groupId:" + groupId);
 
                     Date startDate = null, finishDate = null;
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                    Calendar c = Calendar.getInstance();
+
+                    try {
+                        startDate = formatter.parse(formatter.format(date));
+                        c.setTime(startDate);
+                        c.add(Calendar.DATE, 1);
+                        finishDate = c.getTime();
+                        Log.d(TAG,startDate + " " + finishDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
 
-
-                    mainViewModel.getTimeTableGroupOnDay(demoDate,groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                    mainViewModel.getTimeTableGroupOnDay(startDate,groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                         @Override
                         public void onChanged(List<TimeTableWithTeacherEntity> list) {
                             if (list.size() == 0){
