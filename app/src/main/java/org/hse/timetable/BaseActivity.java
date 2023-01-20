@@ -64,7 +64,7 @@ public abstract class BaseActivity extends FragmentActivity {
         getTime();
     }
 
-    protected void showTime(Date dateTime){
+    protected void showTime(Date dateTime, String... groupNameOrTeacher){
         if (dateTime == null) {
             return;
         }

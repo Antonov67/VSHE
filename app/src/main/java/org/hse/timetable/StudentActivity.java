@@ -151,49 +151,15 @@ public class StudentActivity extends BaseActivity{
             {
                 Object item = adapter.getItem(selectedItemPosition);
                 Log.d(TAG,"item: " + item);
-                mainViewModel.getGroupByName(item + "").observe(StudentActivity.this, new Observer<List<GroupEntity>>() {
-                    @Override
-                    public void onChanged(List<GroupEntity> list) {
-                        for (GroupEntity groupEntity: list) {
-                            groupId = groupEntity.id;
-                            Log.d(TAG,"groupId: " + groupId);
-                        }
 
-                        Log.d(TAG, "inGroupID: " + groupId);
-                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-                        Date date = null;
-                        try {
-                            date = simpleDateFormat.parse("2021-02-01 16:00");
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        mainViewModel.getTimeTableTeacherByDateAndGroupId(date,groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
-                            @Override
-                            public void onChanged(List<TimeTableWithTeacherEntity> list) {
-                                if (list.size() == 0){
-                                    initDataFromTimeTable(null);
-                                }else{
-                                    for (TimeTableWithTeacherEntity teacherEntity: list) {
-                                        Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
-
-                                        initDataFromTimeTable(teacherEntity);
-                                    }
-                                }
-
-                            }
-                        });
-
-
-                    }
-                });
 
                 Log.d(TAG, "itemSelected " + item);
-
-//                try {
-//                    showTime(simpleDateFormat.parse("2021-02-01 16:00"));
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                try {
+                    showTime(simpleDateFormat.parse("2021-02-01 16:00"),String.valueOf(item));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -315,8 +281,42 @@ public class StudentActivity extends BaseActivity{
     }
 
     @Override
-    protected void showTime(Date dateTime) {
+    protected void showTime(Date dateTime, String... groupNameOrTeacher) {
       //  super.showTime(dateTime);
+
+        Log.d(TAG,"groupNameOrTeacher:" + groupNameOrTeacher[0]);
+
+        mainViewModel.getGroupByName(groupNameOrTeacher[0]).observe(StudentActivity.this, new Observer<List<GroupEntity>>() {
+            @Override
+            public void onChanged(List<GroupEntity> list) {
+                for (GroupEntity groupEntity: list) {
+                    groupId = groupEntity.id;
+                    Log.d(TAG,"groupId: " + groupId);
+                }
+
+                Log.d(TAG, "inGroupID: " + groupId);
+
+
+
+                mainViewModel.getTimeTableTeacherByDateAndGroupId(dateTime,groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                    @Override
+                    public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                        if (list.size() == 0){
+                            initDataFromTimeTable(null);
+                        }else{
+                            for (TimeTableWithTeacherEntity teacherEntity: list) {
+                                Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
+
+                                initDataFromTimeTable(teacherEntity);
+                            }
+                        }
+
+                    }
+                });
+
+
+            }
+        });
 
 
     }
