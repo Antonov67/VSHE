@@ -44,10 +44,19 @@ public interface HseDao {
     @Query("SELECT * FROM 'time_table' WHERE group_id = :group AND :date >= time_start AND :date <= time_end")
     LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacherByDateAndGroupID(Date date, int group);
 
+    //поиск по дате и id учителя
+    @Transaction
+    @Query("SELECT * FROM 'time_table' WHERE teacher_id = :teacherId AND :date >= time_start AND :date <= time_end")
+    LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacherByDateAndTeacherID(Date date, int teacherId);
+
 
     //поиск id группы по названию группы
     @Query("SELECT * FROM 'group' WHERE name = :groupName")
     LiveData<List<GroupEntity>> getGroupByName(String groupName);
+
+    //поиск id группы по fio учителя
+    @Query("SELECT * FROM 'teacher' WHERE fio = :teacherFIO")
+    LiveData<List<TeacherEntity>> getTeacherByFIO(String teacherFIO);
 
     @Insert
     void insertTimeTable(List<TimeTableEntity> data);

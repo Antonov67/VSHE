@@ -2,6 +2,7 @@ package org.hse.timetable;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,6 +35,9 @@ public class TeacherActivity extends BaseActivity{
 
     private Spinner spinner;
     Date currenttime;
+
+    private int teacherId;
+
     StudentActivity.Group [] teachers = {
             new StudentActivity.Group(1, "Алова Надежда Владимировна"),
             new StudentActivity.Group(2, "Андрианов Игорь Владимирович"),
@@ -142,6 +147,13 @@ public class TeacherActivity extends BaseActivity{
             {
                 Object item = adapter.getItem(selectedItemPosition);
                 Log.d(TAG, "itemSelected" + item);
+
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                try {
+                    showTime(simpleDateFormat.parse("2021-02-01 16:00"),String.valueOf(item));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
 
             //@Override
@@ -219,15 +231,80 @@ public class TeacherActivity extends BaseActivity{
          });
     }
 
-    private  void initData()
-    {
-        status.setText("Нет пар");
+//    private  void initData()
+//    {
+//        status.setText("Нет пар");
+//
+//        subject.setText("Дисциплина");
+//        cabinet.setText("Кабинет");
+//        corp.setText("Корпус");
+//        teacher.setText("Преподаватель");
+//    }
 
-        subject.setText("Дисциплина");
-        cabinet.setText("Кабинет");
-        corp.setText("Корпус");
-        teacher.setText("Преподаватель");
+    private void initData(){
+        initDataFromTimeTable(null);
     }
+
+    private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableTeacherEntity){
+        if (timeTableTeacherEntity == null){
+            status.setText("Нет пар");
+            subject.setText("Дисциплина");
+            cabinet.setText("Кабинет");
+            corp.setText("Корпус");
+            teacher.setText("Преподаватель");
+            return;
+        }
+        status.setText("Идет пара");
+        TimeTableEntity timeTableEntity = timeTableTeacherEntity.timeTableEntity;
+
+        subject.setText(timeTableEntity.subjName);
+        cabinet.setText(timeTableEntity.cabinet);
+        corp.setText(timeTableEntity.corp);
+        teacher.setText(timeTableTeacherEntity.teacherEntity.fio);
+    }
+
+    @Override
+    protected void showTime(Date dateTime, String... groupNameOrTeacher) {
+        //  super.showTime(dateTime);
+
+        Log.d(TAG,"groupNameOrTeacher:" + groupNameOrTeacher[0]);
+
+        mainViewModel.getTeacherByFIO(groupNameOrTeacher[0]).observe(TeacherActivity.this, new Observer<List<TeacherEntity>>() {
+            @Override
+            public void onChanged(List<TeacherEntity> list) {
+                for (TeacherEntity teacher: list) {
+                    teacherId = teacher.id;
+                    Log.d(TAG,"groupId: " + teacherId);
+                }
+
+                Log.d(TAG, "inGroupID: " + teacherId);
+
+
+
+                mainViewModel.getTimetableTeacherByDateAndTeacherID(dateTime,teacherId).observe(TeacherActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                    @Override
+                    public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                        if (list.size() == 0){
+                            initDataFromTimeTable(null);
+                        }else{
+                            for (TimeTableWithTeacherEntity teacherEntity: list) {
+                                Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.teacherId);
+
+                                initDataFromTimeTable(teacherEntity);
+                            }
+                        }
+
+                    }
+                });
+
+
+            }
+        });
+
+
+    }
+
+
 
     private void toast(String text)
     {

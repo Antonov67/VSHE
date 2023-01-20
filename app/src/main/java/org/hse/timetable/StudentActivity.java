@@ -36,7 +36,7 @@ public class StudentActivity extends BaseActivity{
 
     protected MainViewModel mainViewModel;
 
-    private static int groupId = 0;
+    private int groupId;
 
 
     ArrayAdapter adapter;

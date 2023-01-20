@@ -5,6 +5,7 @@ import android.content.Context;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import java.util.Date;
 import java.util.List;
@@ -34,6 +35,16 @@ public class HseRepository {
     //поиск id группы по названию группы
     public LiveData<List<GroupEntity>> getGroupByName(String groupName){
         return dao.getGroupByName(groupName);
+    };
+
+    //поиск id учителя по его fio
+    public LiveData<List<TeacherEntity>> getTeacherByFIO(String teacherFIO){
+        return dao.getTeacherByFIO(teacherFIO);
+    };
+
+    //поиск по дате и id учителя
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacherByDateAndTeacherID(Date date, int teacherId){
+        return dao.getTimetableTeacherByDateAndTeacherID(date, teacherId);
     };
 
 }

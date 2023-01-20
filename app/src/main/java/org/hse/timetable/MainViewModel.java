@@ -36,4 +36,14 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<List<GroupEntity>> getGroupByName(String groupName){
         return repository.getGroupByName(groupName);
     };
+    //поиск id учителя по его fio
+    public LiveData<List<TeacherEntity>> getTeacherByFIO(String teacherFIO){
+        return repository.getTeacherByFIO(teacherFIO);
+    };
+
+    //поиск по дате и id учителя
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacherByDateAndTeacherID(Date date, int teacherId){
+        return repository.getTimetableTeacherByDateAndTeacherID(date, teacherId);
+    };
+
 }
