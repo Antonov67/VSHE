@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ScheduleActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ItemAdapter adapter;
     Date date;
+    String id;
 
     protected MainViewModel mainViewModel;
 
@@ -48,7 +50,7 @@ public class ScheduleActivity extends AppCompatActivity {
         BaseActivity.ScheduleType type = (BaseActivity.ScheduleType) getIntent().getSerializableExtra(ARG_TYPE);
         BaseActivity.ScheduleMode mode = (BaseActivity.ScheduleMode) getIntent().getSerializableExtra(ARG_MODE);
         date = (Date) getIntent().getSerializableExtra(ARG_DATE);
-        String id = getIntent().getStringExtra(ARG_ID);
+        id = getIntent().getStringExtra(ARG_ID);
 
         TextView title = findViewById(R.id.main_title);
         title.setText("Schedule " + " " + id + " on " + type);
@@ -67,13 +69,15 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     private void initData(BaseActivity.ScheduleType type) {
-        List<ScheduleItem> list = new ArrayList<>();
+        List<ScheduleItem> scheduleItems = new ArrayList<>();
 
         ScheduleItemHeader header = new ScheduleItemHeader();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+       // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         header.setTitle(simpleDateFormat.format(date));
 
-        list.add(header);
+
+        scheduleItems.add(header);
 
         if (type == BaseActivity.ScheduleType.DAY){
 
@@ -84,7 +88,7 @@ public class ScheduleActivity extends AppCompatActivity {
 //            item.setName("Анализ данных (анг)");
 //            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
 //            item.setTeacher("Пред. Гущим Михаил Иванович");
-//            list.add(item);
+//            scheduleItems.add(item);
 //
 //            item = new ScheduleItem();
 //            item.setStart("12:00");
@@ -95,30 +99,49 @@ public class ScheduleActivity extends AppCompatActivity {
 //            item.setTeacher("Пред. Гущим Михаил Иванович");
 //            list.add(item);
 
-            mainViewModel.getGroupByName(groupNameOrTeacher[0]).observe(StudentActivity.this, new Observer<List<GroupEntity>>() {
+            Log.d(TAG,"schedule/id:" + id + " date: " + simpleDateFormat.format(date));
+            mainViewModel.getGroupByName(id).observe(this, new Observer<List<GroupEntity>>() {
                 @Override
                 public void onChanged(List<GroupEntity> list) {
+                    int groupId=0;
                     for (GroupEntity groupEntity: list) {
                         groupId = groupEntity.id;
-                        Log.d(TAG,"groupId: " + groupId);
                     }
+                    Log.d(TAG,"schedule/groupId:" + groupId);
 
-                    Log.d(TAG, "inGroupID: " + groupId);
+                    Date startDate = null, finishDate = null;
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 
 
-                    mainViewModel.getTimeTableTeacherByDateAndGroupId(dateTime,groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                    mainViewModel.getTimeTableGroupOnDay(demoDate,groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                         @Override
                         public void onChanged(List<TimeTableWithTeacherEntity> list) {
                             if (list.size() == 0){
                                 initDataFromTimeTable(null);
                             }else{
                                 for (TimeTableWithTeacherEntity teacherEntity: list) {
-                                    Log.d(TAG,teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
+                                    Log.d(TAG,"schedule:" + teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
 
                                     initDataFromTimeTable(teacherEntity);
                                 }
                             }
+
+                        }
+                        private void initDataFromTimeTable(TimeTableWithTeacherEntity teacherEntity) {
+                             Log.d(TAG,"schedule: " + teacherEntity.timeTableEntity.subjName);
+                            ScheduleItem item = new ScheduleItem();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.forLanguageTag("ru"));
+                            item.setStart(simpleDateFormat.format(teacherEntity.timeTableEntity.timeStart));
+                            item.setEnd(simpleDateFormat.format(teacherEntity.timeTableEntity.timeEnd));
+                            item.setType(teacherEntity.timeTableEntity.type+"");
+                            item.setName(teacherEntity.timeTableEntity.subjName);
+                            item.setPlace(teacherEntity.timeTableEntity.cabinet);
+                            item.setTeacher(teacherEntity.teacherEntity.fio);
+                            scheduleItems.add(item);
+                            Log.d(TAG,"schedule: " + item.getTeacher());
+                            adapter.setDataList(scheduleItems);
+                            adapter.notifyDataSetChanged();
 
                         }
                     });
@@ -127,46 +150,36 @@ public class ScheduleActivity extends AppCompatActivity {
                 }
             });
 
-
-
-
         }else {
 
-            for (int i=1; i<=7; i++){
-                ScheduleItem item = new ScheduleItem();
-                item.setStart("10:00");
-                item.setEnd("11:00");
-                item.setType("Практическое задание");
-                item.setName("Анализ данных (анг)");
-                item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-                item.setTeacher("Пред. Гущим Михаил Иванович");
-                list.add(item);
-
-                ScheduleItemHeader header2 = new ScheduleItemHeader();
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
-                header2.setTitle(simpleDateFormat2.format(date));
-
-                Date dateNext = (Date) date.clone();
-
-                Log.d("777",date.toString());
-                Calendar c = Calendar.getInstance();
-                c.setTime(dateNext);
-                c.add(Calendar.DATE, i);
-                dateNext = c.getTime();
-                Log.d("777",date.toString());
-                header2.setTitle(simpleDateFormat2.format(dateNext));
-                list.add(header2);
-
-            }
-
-
-
-
+//            for (int i=1; i<=7; i++){
+//                ScheduleItem item = new ScheduleItem();
+//                item.setStart("10:00");
+//                item.setEnd("11:00");
+//                item.setType("Практическое задание");
+//                item.setName("Анализ данных (анг)");
+//                item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+//                item.setTeacher("Пред. Гущим Михаил Иванович");
+//                list.add(item);
+//
+//                ScheduleItemHeader header2 = new ScheduleItemHeader();
+//                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+//                header2.setTitle(simpleDateFormat2.format(date));
+//
+//                Date dateNext = (Date) date.clone();
+//
+//                Log.d("777",date.toString());
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(dateNext);
+//                c.add(Calendar.DATE, i);
+//                dateNext = c.getTime();
+//                Log.d("777",date.toString());
+//                header2.setTitle(simpleDateFormat2.format(dateNext));
+//                list.add(header2);
+//
+//            }
         }
 
-
-
-        adapter.setDataList(list);
 
     }
 
