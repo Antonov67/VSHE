@@ -34,4 +34,9 @@ public class MainViewModel extends AndroidViewModel {
     public LiveData<List<TimeTableWithGroupEntity>> getTimeTableGroupByIdAndDate(Date date, int group){
         return repository.getTimetableGroupByIdAndDate(date, group);
     };
+
+    //поиск id группы по названию группы
+    public LiveData<List<GroupEntity>> getGroupByName(String groupName){
+        return repository.getGroupByName(groupName);
+    };
 }

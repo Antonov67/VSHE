@@ -36,6 +36,9 @@ public class StudentActivity extends BaseActivity{
 
     protected MainViewModel mainViewModel;
 
+    private static int group_id = 0;
+
+
     ArrayAdapter adapter;
 
     String[] course = {"БИ","ПИ","Э","УБ","И","Ю","МБ","РИС","ИЯ"};
@@ -280,12 +283,11 @@ public class StudentActivity extends BaseActivity{
       //  super.showTime(dateTime);
 
 
-        mainViewModel.getTimeTableTeacherByDate(dateTime).observe(this, new Observer<List<TimeTableWithTeacherEntity>>() {
+        mainViewModel.getTimeTableGroupByIdAndDate(dateTime,group_id).observe(this, new Observer<List<TimeTableWithGroupEntity>>() {
             @Override
-            public void onChanged(List<TimeTableWithTeacherEntity> list) {
-                for (TimeTableWithTeacherEntity listEntity: list) {
-                    Log.d(TAG,listEntity.timeTableEntity.subjName + " " + listEntity.teacherEntity.fio + " " + listEntity.timeTableEntity.groupId);
-                    Log.d(TAG, listEntity.timeTableEntity.teacherId + "");
+            public void onChanged(List<TimeTableWithGroupEntity> list) {
+                for (TimeTableWithGroupEntity groupEntity: list) {
+                    Log.d(TAG,groupEntity.timeTableEntity.subjName + " " + groupEntity.groupEntity.name + " " + groupEntity.timeTableEntity.groupId);
 
                     //запрос по дате и по group_id
 //                    mainViewModel.getTimeTableGroupByIdAndDate(dateTime,listEntity.timeTableEntity.groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithGroupEntity>>() {

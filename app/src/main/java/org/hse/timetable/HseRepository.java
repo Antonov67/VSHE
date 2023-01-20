@@ -4,6 +4,7 @@ package org.hse.timetable;
 import android.content.Context;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Query;
 
 import java.util.Date;
 import java.util.List;
@@ -32,5 +33,10 @@ public class HseRepository {
     public LiveData<List<TimeTableWithGroupEntity>> getTimetableGroupByIdAndDate(Date date, int group) {
         return dao.getTimetableGroupByIdAndDate(date, group);
     }
+
+    //поиск id группы по названию группы
+    public LiveData<List<GroupEntity>> getGroupByName(String groupName){
+        return dao.getGroupByName(groupName);
+    };
 
 }
