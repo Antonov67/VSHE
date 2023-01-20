@@ -56,8 +56,8 @@ public interface HseDao {
 
     //расписание на текущий день для группы по id и дню
     @Transaction
-    @Query("SELECT * FROM 'time_table' WHERE group_id = :group AND :date = time_end")
-    LiveData<List<TimeTableWithTeacherEntity>> getTimeTableGroupOnDay(Date date, int group);
+    @Query("SELECT * FROM 'time_table' WHERE group_id = :group AND time_start >= :date1 AND time_start <= :date2")
+    LiveData<List<TimeTableWithTeacherEntity>> getTimeTableGroupOnPeriod(Date date1, Date date2, int group);
 
 
     //поиск id группы по fio учителя

@@ -124,8 +124,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-
-                    mainViewModel.getTimeTableGroupOnDay(startDate,groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                    mainViewModel.getTimeTableGroupOnPeriod(startDate, finishDate, groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                         @Override
                         public void onChanged(List<TimeTableWithTeacherEntity> list) {
                             if (list.size() == 0){
