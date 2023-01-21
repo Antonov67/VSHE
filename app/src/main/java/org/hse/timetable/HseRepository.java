@@ -47,9 +47,14 @@ public class HseRepository {
         return dao.getTimetableTeacherByDateAndTeacherID(date, teacherId);
     };
 
-    //расписание на текущий день для группы по id и дню
+    //расписание на текущий период для группы по id
     public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableGroupOnPeriod(Date date1, Date date2, int group){
         return dao.getTimeTableGroupOnPeriod(date1,date2,group);
+    };
+
+    //расписание на текущий период для учителя по id
+    public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherOnPeriod(Date date1, Date date2, int teacherId){
+        return dao.getTimeTableTeacherOnPeriod(date1, date2, teacherId);
     };
 
 }

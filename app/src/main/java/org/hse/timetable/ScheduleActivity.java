@@ -271,7 +271,198 @@ public class ScheduleActivity extends AppCompatActivity {
 //            }
             }
         }
-        if (mode == BaseActivity.ScheduleMode.TEACHER){}
+        if (mode == BaseActivity.ScheduleMode.TEACHER){
+            if (type == BaseActivity.ScheduleType.DAY){
+
+//            ScheduleItem item = new ScheduleItem();
+//            item.setStart("10:00");
+//            item.setEnd("11:00");
+//            item.setType("Практическое задание");
+//            item.setName("Анализ данных (анг)");
+//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+//            item.setTeacher("Пред. Гущим Михаил Иванович");
+//            scheduleItems.add(item);
+//
+//            item = new ScheduleItem();
+//            item.setStart("12:00");
+//            item.setEnd("13:00");
+//            item.setType("Практическое задание");
+//            item.setName("Анализ данных (анг)");
+//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+//            item.setTeacher("Пред. Гущим Михаил Иванович");
+//            list.add(item);
+
+
+                mainViewModel.getTeacherByFIO(id).observe(this, new Observer<List<TeacherEntity>>() {
+                    @Override
+                    public void onChanged(List<TeacherEntity> list) {
+                        int groupId=0;
+                        for (TeacherEntity teacherEntity: list) {
+                            groupId = teacherEntity.id;
+                        }
+
+                        Date startDate = null, finishDate = null;
+                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        Calendar c = Calendar.getInstance();
+
+                        try {
+                            startDate = formatter.parse(formatter.format(date));
+                            c.setTime(startDate);
+                            c.add(Calendar.DATE, 1);
+                            finishDate = c.getTime();
+                            Log.d(TAG,startDate + " " + finishDate);
+
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        mainViewModel.getTimeTableTeacherOnPeriod(startDate, finishDate, groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                            @Override
+                            public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                                if (list.size() == 0){
+                                    initDataFromTimeTable(null);
+                                }else{
+                                    for (TimeTableWithTeacherEntity teacherEntity: list) {
+                                        Log.d(TAG,"schedule:" + teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
+
+                                        initDataFromTimeTable(teacherEntity);
+                                    }
+                                }
+
+                            }
+                            private void initDataFromTimeTable(TimeTableWithTeacherEntity teacherEntity) {
+
+                                if (teacherEntity != null){
+                                    Log.d(TAG,"crush");
+                                    Log.d(TAG,"schedule: " + teacherEntity.timeTableEntity.subjName);
+                                    ScheduleItem item = new ScheduleItem();
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.forLanguageTag("ru"));
+                                    item.setStart(simpleDateFormat.format(teacherEntity.timeTableEntity.timeStart));
+                                    item.setEnd(simpleDateFormat.format(teacherEntity.timeTableEntity.timeEnd));
+                                    item.setType(teacherEntity.timeTableEntity.type+"");
+                                    item.setName(teacherEntity.timeTableEntity.subjName);
+                                    item.setPlace(teacherEntity.timeTableEntity.cabinet);
+                                    item.setTeacher(teacherEntity.teacherEntity.fio);
+                                    scheduleItems.add(item);
+                                    Log.d(TAG,"schedule: " + item.getTeacher());
+                                    adapter.setDataList(scheduleItems);
+                                }
+                                adapter.notifyDataSetChanged();
+
+                            }
+                        });
+
+
+                    }
+                });
+
+            }
+            if (type == BaseActivity.ScheduleType.WEEK) {
+
+
+                mainViewModel.getTeacherByFIO(id).observe(this, new Observer<List<TeacherEntity>>() {
+                    @Override
+                    public void onChanged(List<TeacherEntity> list) {
+                        int groupId=0;
+                        for (TeacherEntity teacherEntity: list) {
+                            groupId = teacherEntity.id;
+                        }
+
+                        Date startDate = null, finishDate = null;
+                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                        Calendar c = Calendar.getInstance();
+
+                        try {
+                            startDate = formatter.parse(formatter.format(date));
+                            c.setTime(startDate);
+
+                            //дней до конца недели
+                            int delta = (c.get(Calendar.DAY_OF_WEEK)==1 ? 1 : 8 - c.get(Calendar.DAY_OF_WEEK));
+                            Log.d(TAG,"delta " + delta);
+                            c.add(Calendar.DATE, delta);
+                            finishDate = c.getTime();
+                            Log.d(TAG,startDate + " " + finishDate);
+
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        mainViewModel.getTimeTableTeacherOnPeriod(startDate, finishDate, groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
+                            @Override
+                            public void onChanged(List<TimeTableWithTeacherEntity> list) {
+                                if (list.size() == 0){
+                                    initDataFromTimeTable(null);
+                                }else{
+                                    for (TimeTableWithTeacherEntity teacherEntity: list) {
+                                        Log.d(TAG,"schedule:" + teacherEntity.timeTableEntity.subjName + " " + teacherEntity.timeTableEntity.groupId);
+
+                                        initDataFromTimeTable(teacherEntity);
+                                    }
+                                }
+
+                            }
+                            private void initDataFromTimeTable(TimeTableWithTeacherEntity teacherEntity) {
+
+                                if (teacherEntity != null){
+                                    ScheduleItemHeader header = new ScheduleItemHeader();
+                                    SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+                                    header.setTitle(simpleDateFormat2.format(teacherEntity.timeTableEntity.timeStart));
+                                    scheduleItems.add(header);
+
+                                    ScheduleItem item = new ScheduleItem();
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm", Locale.forLanguageTag("ru"));
+                                    item.setStart(simpleDateFormat.format(teacherEntity.timeTableEntity.timeStart));
+                                    item.setEnd(simpleDateFormat.format(teacherEntity.timeTableEntity.timeEnd));
+                                    item.setType(teacherEntity.timeTableEntity.type+"");
+                                    item.setName(teacherEntity.timeTableEntity.subjName);
+                                    item.setPlace(teacherEntity.timeTableEntity.cabinet);
+                                    item.setTeacher(teacherEntity.teacherEntity.fio);
+                                    scheduleItems.add(item);
+
+
+                                    adapter.setDataList(scheduleItems);
+                                }
+                                adapter.notifyDataSetChanged();
+
+                            }
+                        });
+
+
+                    }
+                });
+
+
+
+//            for (int i=1; i<=7; i++){
+//                ScheduleItem item = new ScheduleItem();
+//                item.setStart("10:00");
+//                item.setEnd("11:00");
+//                item.setType("Практическое задание");
+//                item.setName("Анализ данных (анг)");
+//                item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
+//                item.setTeacher("Пред. Гущим Михаил Иванович");
+//                list.add(item);
+//
+//                ScheduleItemHeader header2 = new ScheduleItemHeader();
+//                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+//                header2.setTitle(simpleDateFormat2.format(date));
+//
+//                Date dateNext = (Date) date.clone();
+//
+//                Log.d("777",date.toString());
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(dateNext);
+//                c.add(Calendar.DATE, i);
+//                dateNext = c.getTime();
+//                Log.d("777",date.toString());
+//                header2.setTitle(simpleDateFormat2.format(dateNext));
+//                list.add(header2);
+//
+//            }
+            }
+        }
 
 
 
