@@ -342,7 +342,7 @@ public class StudentActivity extends BaseActivity{
         intent.putExtra(ScheduleActivity.ARG_MODE, mode);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         try {
-            intent.putExtra(ScheduleActivity.ARG_DATE, simpleDateFormat.parse("2021-02-01 16:00"));
+            intent.putExtra(ScheduleActivity.ARG_DATE, simpleDateFormat.parse("2021-02-02 16:00"));
         }catch (Exception e){
 
         }

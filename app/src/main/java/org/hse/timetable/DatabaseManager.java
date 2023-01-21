@@ -90,6 +90,9 @@ public class DatabaseManager {
         DatabaseManager.getInstance(context).getHseDao().insertTeacher(teachers);
 
         List<TimeTableEntity> timeTables = new ArrayList<>();
+
+        //2021-02-01
+
         TimeTableEntity timeTable = new TimeTableEntity();
         timeTable.id = 1;
         timeTable.cabinet = "Кабинет 1";
@@ -143,6 +146,122 @@ public class DatabaseManager {
         timeTable.groupId = 3;
         timeTable.teacherId = 4;
         timeTables.add(timeTable);
+
+        // 2021-02-02
+
+         timeTable = new TimeTableEntity();
+        timeTable.id = 5;
+        timeTable.cabinet = "Кабинет 1";
+        timeTable.subGroup = "ПИ";
+        timeTable.subjName = "Философия2";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-02 10:00");
+        timeTable.timeEnd = dateFromString("2021-02-02 11:30");
+        timeTable.groupId = 1;
+        timeTable.teacherId = 1;
+        timeTables.add(timeTable);
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 6;
+        timeTable.cabinet = "Кабинет 2";
+        timeTable.subGroup = "ПИ";
+        timeTable.subjName = "Мобильная разработка2";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-02 13:00");
+        timeTable.timeEnd = dateFromString("2021-02-02 15:00");
+        timeTable.groupId = 1;
+        timeTable.teacherId = 2;
+        timeTables.add(timeTable);
+
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 7;
+        timeTable.cabinet = "Кабинет 3";
+        timeTable.subGroup = "ПИ-3";
+        timeTable.subjName = "Мобильная разработка3";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-02 16:00");
+        timeTable.timeEnd = dateFromString("2021-02-02 18:00");
+        timeTable.groupId = 2;
+        timeTable.teacherId = 3;
+        timeTables.add(timeTable);
+
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 8;
+        timeTable.cabinet = "Кабинет 4";
+        timeTable.subGroup = "ПИ-4";
+        timeTable.subjName = "Философия4";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-02 16:00");
+        timeTable.timeEnd = dateFromString("2021-02-02 18:00");
+        timeTable.groupId = 4;
+        timeTable.teacherId = 4;
+        timeTables.add(timeTable);
+
+
+        // 2021-02-04
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 9;
+        timeTable.cabinet = "Кабинет 1";
+        timeTable.subGroup = "ПИ";
+        timeTable.subjName = "Философия2";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-04 10:00");
+        timeTable.timeEnd = dateFromString("2021-02-04 11:30");
+        timeTable.groupId = 1;
+        timeTable.teacherId = 1;
+        timeTables.add(timeTable);
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 10;
+        timeTable.cabinet = "Кабинет 2";
+        timeTable.subGroup = "ПИ";
+        timeTable.subjName = "Мобильная разработка2";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-04 13:00");
+        timeTable.timeEnd = dateFromString("2021-02-04 15:00");
+        timeTable.groupId = 1;
+        timeTable.teacherId = 2;
+        timeTables.add(timeTable);
+
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 11;
+        timeTable.cabinet = "Кабинет 3";
+        timeTable.subGroup = "ПИ-3";
+        timeTable.subjName = "Мобильная разработка3";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-04 16:00");
+        timeTable.timeEnd = dateFromString("2021-02-04 18:00");
+        timeTable.groupId = 2;
+        timeTable.teacherId = 3;
+        timeTables.add(timeTable);
+
+
+        timeTable = new TimeTableEntity();
+        timeTable.id = 12;
+        timeTable.cabinet = "Кабинет 4";
+        timeTable.subGroup = "ПИ-4";
+        timeTable.subjName = "Философия4";
+        timeTable.corp = "К1";
+        timeTable.type = 0;
+        timeTable.timeStart = dateFromString("2021-02-04 16:00");
+        timeTable.timeEnd = dateFromString("2021-02-04 18:00");
+        timeTable.groupId = 3;
+        timeTable.teacherId = 4;
+        timeTables.add(timeTable);
+
+
+
         DatabaseManager.getInstance(context).getHseDao().insertTimeTable(timeTables);
     }
 
