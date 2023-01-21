@@ -14,9 +14,12 @@ public class HseRepository {
     private DatabaseManager databaseManager;
     private HseDao dao;
 
+    private TimeResponseInt timeResponse;
+
     public HseRepository(Context context){
         databaseManager = DatabaseManager.getInstance(context);
         dao = databaseManager.getHseDao();
+        timeResponse = new TimeResponseFromServer();
     }
 
     public LiveData<List<GroupEntity>> getGroups(){
@@ -56,5 +59,9 @@ public class HseRepository {
     public LiveData<List<TimeTableWithTeacherEntity>> getTimeTableTeacherOnPeriod(Date date1, Date date2, int teacherId){
         return dao.getTimeTableTeacherOnPeriod(date1, date2, teacherId);
     };
+
+    public LiveData<Date> getTime(){
+        return timeResponse.getTime();
+    }
 
 }

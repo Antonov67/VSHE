@@ -56,5 +56,10 @@ public class MainViewModel extends AndroidViewModel {
         return repository.getTimeTableTeacherOnPeriod(date1, date2, teacherId);
     };
 
+    //запрос времени
+   public LiveData<Date> getTime(){
+       return repository.getTime();
+   }
+
 
 }
