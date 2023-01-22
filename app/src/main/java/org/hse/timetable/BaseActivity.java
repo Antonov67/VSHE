@@ -1,7 +1,7 @@
 package org.hse.timetable;
 
 
-import static android.content.ContentValues.TAG;
+
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
@@ -10,20 +10,9 @@ import androidx.lifecycle.ViewModelProvider;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
-import java.util.Locale;
-
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 
 
@@ -41,12 +30,13 @@ public abstract class BaseActivity extends FragmentActivity {
 
     protected MainViewModel mainViewModel;
 
-//    private final static String TAG = "BaseActivity";
-//    public static final String URL = "https://api.ipgeolocation.io/ipgeo?apiKey=b03018f75ed94023a005637878ec0977";
+    private final static String TAG = "BaseActivity";
+  //  public static final String URL = "https://api.ipgeolocation.io/ipgeo?apiKey=b03018f75ed94023a005637878ec0977";
 
 
     protected TextView time;
     protected Date currentTime;
+
 
    // private OkHttpClient client = new OkHttpClient();
 
@@ -65,32 +55,16 @@ public abstract class BaseActivity extends FragmentActivity {
  //   }
 
 
-    protected void initTime(){
-
-        Log.d(TAG, "InitTimeStart: ");
-
-        mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
-
-        mainViewModel.getTime().observe(this, new Observer<Date>() {
-            @Override
-            public void onChanged(Date date) {
-                Log.d(TAG, "DateFromServer: " + date);
-            }
-        });
-       // getTime();
-    }
 
     protected void showTime(Date dateTime, String... groupNameOrTeacher){
-        if (dateTime == null) {
-            return;
-        }
-        currentTime = dateTime;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm,EEEE", Locale.forLanguageTag("ru"));
-        time.setText(simpleDateFormat.format(currentTime));
+
     }
 
 
-//    private void parseResponse(Response response){
+
+
+
+    //    private void parseResponse(Response response){
 //        Gson gson = new Gson();
 //        ResponseBody body = response.body();
 //        try{

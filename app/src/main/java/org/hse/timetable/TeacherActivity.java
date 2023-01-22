@@ -106,17 +106,6 @@ public class TeacherActivity extends BaseActivity{
     //}
 
 
-     @Override
-    protected void initTime()
-    {
-        currentTime = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
-        java.util.TimeZone tz = TimeZone.getTimeZone(("GMT+3")); //часовой пояс Москвы
-        simpleDateFormat.setTimeZone(tz);
-        String[] dateFormatSplit = simpleDateFormat.format(currentTime).split(" ");
-        String timeText = "Сегодня: " + dateFormatSplit[0] + " " + dateFormatSplit[1].substring(0,1).toUpperCase() + dateFormatSplit[1].substring(1);
-        time.setText(timeText);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -164,7 +153,7 @@ public class TeacherActivity extends BaseActivity{
         });
 
         time = findViewById(R.id.id_tv_time_Teacher);
-        initTime();
+
 
         status = findViewById(R.id.textView44);
         subject = findViewById(R.id.textView55);
@@ -185,6 +174,16 @@ public class TeacherActivity extends BaseActivity{
                 //showStudent();
                 toast("Расписание на день");
             };
+        });
+
+        mainViewModel.getTime().observe(this, new Observer<Date>() {
+            @Override
+            public void onChanged(Date date) {
+                currentTime = date;
+                Log.d(TAG, "BaseActivity,DateFromServer: " + date);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                time.setText(simpleDateFormat.format(date));
+            }
         });
 
         button44.setOnClickListener(new View.OnClickListener()
@@ -329,5 +328,6 @@ public class TeacherActivity extends BaseActivity{
         }
         startActivity(intent);
     }
+
 
 }

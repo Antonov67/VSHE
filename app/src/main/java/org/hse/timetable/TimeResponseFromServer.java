@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
 
@@ -28,10 +29,16 @@ public class TimeResponseFromServer implements TimeResponseInt{
     private OkHttpClient client = new OkHttpClient();
     Date dateTime;
 
+    MutableLiveData<Date> liveData;
 
 
     @Override
     public LiveData<Date> getTime() {
+
+        if (liveData == null) {
+            liveData = new MutableLiveData<>();
+        }
+
         Request request = new Request.Builder().url(URL).build();
         Call call = client.newCall(request);
 
@@ -51,7 +58,10 @@ public class TimeResponseFromServer implements TimeResponseInt{
 
 
                     dateTime = simpleDateFormat.parse(currentTimeVal);
-                    Log.d(TAG, dateTime + "");
+                    Log.d(TAG, "***" + dateTime);
+
+                    liveData.postValue(dateTime);
+
 
 
                 } catch (Exception e) {
@@ -63,16 +73,6 @@ public class TimeResponseFromServer implements TimeResponseInt{
                 Log.e(TAG, "getTime", e);
             }
         });
-
-        Log.d(TAG, "DateFromServer: " + dateTime);
-
-        LiveData<Date> liveData = new LiveData<Date>() {
-            @Nullable
-            @Override
-            public Date getValue() {
-                return dateTime;
-            }
-        };
 
        return liveData;
 

@@ -1,6 +1,6 @@
 package org.hse.timetable;
 
-import static android.content.ContentValues.TAG;
+
 
 
 import android.content.Intent;
@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +46,8 @@ public class StudentActivity extends BaseActivity{
     int[] groupNumber = {1,2,3};
     List<StudentActivity.Group> mock = new ArrayList<>();
 
+    private final static String TAG = "BaseActivity";
+
 
     void enumeration (String[] course, int[] year, int[] groupNumber)
     {
@@ -70,7 +72,8 @@ public class StudentActivity extends BaseActivity{
 
 
 
-  static class Group
+
+    static class Group
     {
         private Integer id;
         private String name;
@@ -107,14 +110,6 @@ public class StudentActivity extends BaseActivity{
         }
     }
 
-//    @Override
-//    protected void initTime ()
-//    {
-//        currentTime = new Date();
-//        Locale locale = new Locale("ru");
-//        SimpleDateFormat simpleDate = new SimpleDateFormat("HH:mm", locale);
-//        time.setText(simpleDate.format(currentTime));
-//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -141,7 +136,6 @@ public class StudentActivity extends BaseActivity{
 
         spinner.setAdapter(adapter);
 
-        initTime();
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -208,6 +202,18 @@ public class StudentActivity extends BaseActivity{
         scheduleDay.setOnClickListener(v -> {showSchedule(ScheduleType.DAY);});
         View scheduleWeek = findViewById(R.id.button4);
         scheduleWeek.setOnClickListener(v -> {showSchedule(ScheduleType.WEEK);});
+
+
+        mainViewModel.getTime().observe(this, new Observer<Date>() {
+            @Override
+            public void onChanged(Date date) {
+                currentTime = date;
+                Log.d(TAG, "BaseActivity,DateFromServer: " + date);
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                time.setText(simpleDateFormat.format(date));
+            }
+        });
+
     }
 
 
@@ -236,7 +242,9 @@ public class StudentActivity extends BaseActivity{
         });
     }
 
-//    @Override
+
+
+    //    @Override
 //    protected void initTime()
  //   {
 //          super.initTime();
@@ -283,7 +291,6 @@ public class StudentActivity extends BaseActivity{
 
     @Override
     protected void showTime(Date dateTime, String... groupNameOrTeacher) {
-      //  super.showTime(dateTime);
 
         Log.d(TAG,"groupNameOrTeacher:" + groupNameOrTeacher[0]);
 
