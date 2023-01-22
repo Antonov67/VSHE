@@ -21,6 +21,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
+// класс получения времени от сервера
 public class TimeResponseFromServer implements TimeResponseInt{
 
     private final static String TAG = "BaseActivity";
@@ -29,6 +30,7 @@ public class TimeResponseFromServer implements TimeResponseInt{
     private OkHttpClient client = new OkHttpClient();
     Date dateTime;
 
+    //переменная liveData для полученного времени и даты от сервера
     MutableLiveData<Date> liveData;
 
 
@@ -38,7 +40,7 @@ public class TimeResponseFromServer implements TimeResponseInt{
         if (liveData == null) {
             liveData = new MutableLiveData<>();
         }
-
+        //получение времени
         Request request = new Request.Builder().url(URL).build();
         Call call = client.newCall(request);
 
@@ -56,13 +58,10 @@ public class TimeResponseFromServer implements TimeResponseInt{
                     String currentTimeVal = timeResponse.getTimeZone().getCurrentTime();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
-
                     dateTime = simpleDateFormat.parse(currentTimeVal);
-                    Log.d(TAG, "***" + dateTime);
 
+                    //запишем в еперменную полученную дату после выполнения запроса
                     liveData.postValue(dateTime);
-
-
 
                 } catch (Exception e) {
                     Log.e(TAG, "", e);
@@ -75,7 +74,5 @@ public class TimeResponseFromServer implements TimeResponseInt{
         });
 
        return liveData;
-
     }
-
 }

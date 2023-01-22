@@ -1,8 +1,5 @@
 package org.hse.timetable;
 
-
-
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class StudentActivity extends BaseActivity{
 
@@ -120,10 +116,10 @@ public class StudentActivity extends BaseActivity{
         enumeration(course,year,groupNumber);
         time = findViewById(R.id.id_tv_time_Student);
 
-        //
+        //viewModel для работы с liveData
 
         mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
-        //mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         spinner = findViewById(R.id.spinnerGroup);
 
 
@@ -144,19 +140,15 @@ public class StudentActivity extends BaseActivity{
                                        int selectedItemPosition, long selectedId)
             {
                 Object item = adapter.getItem(selectedItemPosition);
-                Log.d(TAG,"item: " + item);
 
-
-                Log.d(TAG, "itemSelected " + item);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                 try {
+                    //передадим дату 1.02.2021 и название группы
                     showTime(simpleDateFormat.parse("2021-02-01 16:00"),String.valueOf(item));
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
             }
-
             //@Override
             public void onNothingSelected(AdapterView<?> parent)
             {
@@ -203,30 +195,20 @@ public class StudentActivity extends BaseActivity{
         View scheduleWeek = findViewById(R.id.button4);
         scheduleWeek.setOnClickListener(v -> {showSchedule(ScheduleType.WEEK);});
 
-
+        //получии дату и время от сервера с помощью liveData и MVVM
         mainViewModel.getTime().observe(this, new Observer<Date>() {
             @Override
             public void onChanged(Date date) {
                 currentTime = date;
                 Log.d(TAG, "BaseActivity,DateFromServer: " + date);
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+                //запишем дату в поле вывода в акивити
                 time.setText(simpleDateFormat.format(date));
             }
         });
-
     }
 
-
-
-//    private void initGroupList(List<StudentActivity.Group> groups, List<StudentActivity.Group> list)
-//    {
-//        for(StudentActivity.Group group: list)
-//        {
-//            groups.add(new StudentActivity.Group(group.getId(), group.getName()));
-//        }
-//    }
-
-
+    //с помощью liveData и запроса к бд получим список групп
     private void initGroupList(final List<Group> groups){
         mainViewModel.getGroups().observe(this, new Observer<List<GroupEntity>>() {
             @Override
@@ -243,34 +225,11 @@ public class StudentActivity extends BaseActivity{
     }
 
 
-
-    //    @Override
-//    protected void initTime()
- //   {
-//          super.initTime();
-//        currentTime = new Date();
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm, EEEE", Locale.forLanguageTag("ru"));
-//        java.util.TimeZone tz = TimeZone.getTimeZone(("GMT+3")); //часовой пояс Москвы
-//        simpleDateFormat.setTimeZone(tz);
-//        String[] dateFormatSplit = simpleDateFormat.format(currentTime).split(" ");
-//        String timeText = "Сегодня: " + dateFormatSplit[0] + " " + dateFormatSplit[1].substring(0,1).toUpperCase() + dateFormatSplit[1].substring(1);
-//        time.setText(timeText);
-  //  }
-
-//    private  void initData()
-//    {
-//        status.setText("Нет пар");
-//
-//        subject.setText("Дисциплина");
-//        cabinet.setText("Кабинет");
-//        corp.setText("Корпус");
-//        teacher.setText("Преподаватель");
-//    }
-
     private void initData(){
         initDataFromTimeTable(null);
     }
 
+    //метод записи данных из запроса в поля на активити
     private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableTeacherEntity){
         if (timeTableTeacherEntity == null){
             status.setText("Нет пар");
@@ -292,20 +251,14 @@ public class StudentActivity extends BaseActivity{
     @Override
     protected void showTime(Date dateTime, String... groupNameOrTeacher) {
 
-        Log.d(TAG,"groupNameOrTeacher:" + groupNameOrTeacher[0]);
-
+        //запрос для поиска id группы по ее названию
         mainViewModel.getGroupByName(groupNameOrTeacher[0]).observe(StudentActivity.this, new Observer<List<GroupEntity>>() {
             @Override
             public void onChanged(List<GroupEntity> list) {
                 for (GroupEntity groupEntity: list) {
                     groupId = groupEntity.id;
-                    Log.d(TAG,"groupId: " + groupId);
                 }
-
-                Log.d(TAG, "inGroupID: " + groupId);
-
-
-
+                // вывод данных о занятии группы если оно идет в данныц момент
                 mainViewModel.getTimeTableTeacherByDateAndGroupId(dateTime,groupId).observe(StudentActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                     @Override
                     public void onChanged(List<TimeTableWithTeacherEntity> list) {
@@ -321,12 +274,8 @@ public class StudentActivity extends BaseActivity{
 
                     }
                 });
-
-
             }
         });
-
-
     }
 
     private void toast(String text)

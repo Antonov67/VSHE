@@ -2,7 +2,7 @@ package org.hse.timetable;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
+
 
 public class TeacherActivity extends BaseActivity{
 
@@ -34,7 +34,6 @@ public class TeacherActivity extends BaseActivity{
     ArrayAdapter adapter;
 
     private Spinner spinner;
-    Date currenttime;
 
     private int teacherId;
 
@@ -94,17 +93,6 @@ public class TeacherActivity extends BaseActivity{
             new StudentActivity.Group(53, "Шучалова Юлия Сергеевна"),
             new StudentActivity.Group(54, "Яборов Андрей Владимирович"),
     };
-    //String[] _teacher = {"Преподаватель"};
-    //int[] _teacher_number = {1,2,3,4,5,6,7,8,9,10};
-    //int[] empty = {1,2};
-    //List<StudentActivity.Group> mock = new ArrayList<>();
-
-
-    //String assembly(String _teacher, int _teacher_number, int empty)
-    //{
-    //    return _teacher + "-" + _teacher_number + "-" + empty;
-    //}
-
 
 
     @Override
@@ -113,14 +101,13 @@ public class TeacherActivity extends BaseActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher);
-        //enumeration(_teacher,_teacher_number,empty);
 
         mainViewModel = new ViewModelProvider( this).get(MainViewModel.class);
 
         spinner = findViewById(R.id.spinnerTeacher);
 
         List<StudentActivity.Group> groups = new ArrayList<>();
-        //List<StudentActivity.Group> groups2 = initGroupList(groups, teachers);
+
         initGroupList(groups);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groups);
@@ -135,10 +122,10 @@ public class TeacherActivity extends BaseActivity{
                                        int selectedItemPosition, long selectedId)
             {
                 Object item = adapter.getItem(selectedItemPosition);
-                Log.d(TAG, "itemSelected" + item);
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
                 try {
+                    //запрос по дате 01.01.2021 и ФИО преподавателя
                     showTime(simpleDateFormat.parse("2021-02-01 16:00"),String.valueOf(item));
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -176,6 +163,7 @@ public class TeacherActivity extends BaseActivity{
             };
         });
 
+        //получение времени от сервера и вывод его в активити
         mainViewModel.getTime().observe(this, new Observer<Date>() {
             @Override
             public void onChanged(Date date) {
@@ -203,19 +191,7 @@ public class TeacherActivity extends BaseActivity{
 
     }
 
-
-
-//    private List<StudentActivity.Group> initGroupList(List<StudentActivity.Group> groups, StudentActivity.Group[] list)
-//    {
-//        for(StudentActivity.Group group: list)
-//        {
-//            groups.add(new StudentActivity.Group(group.getId(), group.getName()));
-//        }
-//        return groups;
-//    }
-
-
-
+    //формирование списка преподавателей с помощью liveData
     private void initGroupList(List<StudentActivity.Group> groups){
          mainViewModel.getTeachers().observe(this, new Observer<List<TeacherEntity>>() {
              @Override
@@ -230,20 +206,12 @@ public class TeacherActivity extends BaseActivity{
          });
     }
 
-//    private  void initData()
-//    {
-//        status.setText("Нет пар");
-//
-//        subject.setText("Дисциплина");
-//        cabinet.setText("Кабинет");
-//        corp.setText("Корпус");
-//        teacher.setText("Преподаватель");
-//    }
 
     private void initData(){
         initDataFromTimeTable(null);
     }
 
+    //метод записи данных о текущес занятии в форму
     private void initDataFromTimeTable(TimeTableWithTeacherEntity timeTableTeacherEntity){
         if (timeTableTeacherEntity == null){
             status.setText("Нет пар");
@@ -266,20 +234,15 @@ public class TeacherActivity extends BaseActivity{
     protected void showTime(Date dateTime, String... groupNameOrTeacher) {
         //  super.showTime(dateTime);
 
-        Log.d(TAG,"groupNameOrTeacher:" + groupNameOrTeacher[0]);
 
+        // получим ФИО учителя по его ID
         mainViewModel.getTeacherByFIO(groupNameOrTeacher[0]).observe(TeacherActivity.this, new Observer<List<TeacherEntity>>() {
             @Override
             public void onChanged(List<TeacherEntity> list) {
                 for (TeacherEntity teacher: list) {
                     teacherId = teacher.id;
-                    Log.d(TAG,"groupId: " + teacherId);
                 }
-
-                Log.d(TAG, "inGroupID: " + teacherId);
-
-
-
+                //запрос в БД по id учителя и дате
                 mainViewModel.getTimetableTeacherByDateAndTeacherID(dateTime,teacherId).observe(TeacherActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                     @Override
                     public void onChanged(List<TimeTableWithTeacherEntity> list) {
@@ -299,11 +262,7 @@ public class TeacherActivity extends BaseActivity{
 
             }
         });
-
-
     }
-
-
 
     private void toast(String text)
     {

@@ -21,7 +21,6 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,33 +71,18 @@ public class ScheduleActivity extends AppCompatActivity {
         List<ScheduleItem> scheduleItems = new ArrayList<>();
 
         ScheduleItemHeader header = new ScheduleItemHeader();
-       // SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         header.setTitle(simpleDateFormat.format(date));
         scheduleItems.add(header);
 
+
+        //вывод данных для группы на день
         if (mode == BaseActivity.ScheduleMode.STUDENT){
             if (type == BaseActivity.ScheduleType.DAY){
 
-//            ScheduleItem item = new ScheduleItem();
-//            item.setStart("10:00");
-//            item.setEnd("11:00");
-//            item.setType("Практическое задание");
-//            item.setName("Анализ данных (анг)");
-//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-//            item.setTeacher("Пред. Гущим Михаил Иванович");
-//            scheduleItems.add(item);
-//
-//            item = new ScheduleItem();
-//            item.setStart("12:00");
-//            item.setEnd("13:00");
-//            item.setType("Практическое задание");
-//            item.setName("Анализ данных (анг)");
-//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-//            item.setTeacher("Пред. Гущим Михаил Иванович");
-//            list.add(item);
 
-                Log.d(TAG,"schedule/id:" + id + " date: " + simpleDateFormat.format(date));
+               // поиск id группы по ее названию
                 mainViewModel.getGroupByName(id).observe(this, new Observer<List<GroupEntity>>() {
                     @Override
                     public void onChanged(List<GroupEntity> list) {
@@ -113,9 +97,11 @@ public class ScheduleActivity extends AppCompatActivity {
                         Calendar c = Calendar.getInstance();
 
                         try {
+                            //дата начала - текущач дата
                             startDate = formatter.parse(formatter.format(date));
                             c.setTime(startDate);
                             c.add(Calendar.DATE, 1);
+                            //дата конца периода - следующий день
                             finishDate = c.getTime();
                             Log.d(TAG,startDate + " " + finishDate);
 
@@ -123,7 +109,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
+                        //получим данные на текущий день
                         mainViewModel.getTimeTableGroupOnPeriod(startDate, finishDate, groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                             @Override
                             public void onChanged(List<TimeTableWithTeacherEntity> list) {
@@ -165,9 +151,10 @@ public class ScheduleActivity extends AppCompatActivity {
                 });
 
             }
+            //данные для группы на неделю
             if (type == BaseActivity.ScheduleType.WEEK) {
 
-
+                //поиск id группвы по ее названию
                 mainViewModel.getGroupByName(id).observe(this, new Observer<List<GroupEntity>>() {
                     @Override
                     public void onChanged(List<GroupEntity> list) {
@@ -182,6 +169,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         Calendar c = Calendar.getInstance();
 
                         try {
+                            //начало - текущий день
                             startDate = formatter.parse(formatter.format(date));
                             c.setTime(startDate);
 
@@ -189,6 +177,7 @@ public class ScheduleActivity extends AppCompatActivity {
                             int delta = (c.get(Calendar.DAY_OF_WEEK)==1 ? 1 : 8 - c.get(Calendar.DAY_OF_WEEK));
                             Log.d(TAG,"delta " + delta);
                             c.add(Calendar.DATE, delta);
+                            //конец периода - воскресенье текущей недели
                             finishDate = c.getTime();
                             Log.d(TAG,startDate + " " + finishDate);
 
@@ -196,7 +185,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
+                        //запрос данных для группв на неделю
                         mainViewModel.getTimeTableGroupOnPeriod(startDate, finishDate, groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                             @Override
                             public void onChanged(List<TimeTableWithTeacherEntity> list) {
@@ -241,58 +230,12 @@ public class ScheduleActivity extends AppCompatActivity {
                     }
                 });
 
-
-
-//            for (int i=1; i<=7; i++){
-//                ScheduleItem item = new ScheduleItem();
-//                item.setStart("10:00");
-//                item.setEnd("11:00");
-//                item.setType("Практическое задание");
-//                item.setName("Анализ данных (анг)");
-//                item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-//                item.setTeacher("Пред. Гущим Михаил Иванович");
-//                list.add(item);
-//
-//                ScheduleItemHeader header2 = new ScheduleItemHeader();
-//                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
-//                header2.setTitle(simpleDateFormat2.format(date));
-//
-//                Date dateNext = (Date) date.clone();
-//
-//                Log.d("777",date.toString());
-//                Calendar c = Calendar.getInstance();
-//                c.setTime(dateNext);
-//                c.add(Calendar.DATE, i);
-//                dateNext = c.getTime();
-//                Log.d("777",date.toString());
-//                header2.setTitle(simpleDateFormat2.format(dateNext));
-//                list.add(header2);
-//
-//            }
             }
         }
+        //запрос для учителя на день
         if (mode == BaseActivity.ScheduleMode.TEACHER){
             if (type == BaseActivity.ScheduleType.DAY){
-
-//            ScheduleItem item = new ScheduleItem();
-//            item.setStart("10:00");
-//            item.setEnd("11:00");
-//            item.setType("Практическое задание");
-//            item.setName("Анализ данных (анг)");
-//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-//            item.setTeacher("Пред. Гущим Михаил Иванович");
-//            scheduleItems.add(item);
-//
-//            item = new ScheduleItem();
-//            item.setStart("12:00");
-//            item.setEnd("13:00");
-//            item.setType("Практическое задание");
-//            item.setName("Анализ данных (анг)");
-//            item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-//            item.setTeacher("Пред. Гущим Михаил Иванович");
-//            list.add(item);
-
-
+               //найдем id учителя по его ФИО
                 mainViewModel.getTeacherByFIO(id).observe(this, new Observer<List<TeacherEntity>>() {
                     @Override
                     public void onChanged(List<TeacherEntity> list) {
@@ -306,9 +249,11 @@ public class ScheduleActivity extends AppCompatActivity {
                         Calendar c = Calendar.getInstance();
 
                         try {
+                            //текущая дата
                             startDate = formatter.parse(formatter.format(date));
                             c.setTime(startDate);
                             c.add(Calendar.DATE, 1);
+                            //следующий день
                             finishDate = c.getTime();
                             Log.d(TAG,startDate + " " + finishDate);
 
@@ -316,7 +261,7 @@ public class ScheduleActivity extends AppCompatActivity {
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
+                        //запрос занятий на текущий день
                         mainViewModel.getTimeTableTeacherOnPeriod(startDate, finishDate, groupId).observe(ScheduleActivity.this, new Observer<List<TimeTableWithTeacherEntity>>() {
                             @Override
                             public void onChanged(List<TimeTableWithTeacherEntity> list) {
@@ -358,6 +303,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 });
 
             }
+            //расписание для учителя на неделю
             if (type == BaseActivity.ScheduleType.WEEK) {
 
 
@@ -432,41 +378,8 @@ public class ScheduleActivity extends AppCompatActivity {
 
                     }
                 });
-
-
-
-//            for (int i=1; i<=7; i++){
-//                ScheduleItem item = new ScheduleItem();
-//                item.setStart("10:00");
-//                item.setEnd("11:00");
-//                item.setType("Практическое задание");
-//                item.setName("Анализ данных (анг)");
-//                item.setPlace("Ауд. 503, Кончовский пр-д, д.3");
-//                item.setTeacher("Пред. Гущим Михаил Иванович");
-//                list.add(item);
-//
-//                ScheduleItemHeader header2 = new ScheduleItemHeader();
-//                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("EEEE, dd MMMM", Locale.forLanguageTag("ru"));
-//                header2.setTitle(simpleDateFormat2.format(date));
-//
-//                Date dateNext = (Date) date.clone();
-//
-//                Log.d("777",date.toString());
-//                Calendar c = Calendar.getInstance();
-//                c.setTime(dateNext);
-//                c.add(Calendar.DATE, i);
-//                dateNext = c.getTime();
-//                Log.d("777",date.toString());
-//                header2.setTitle(simpleDateFormat2.format(dateNext));
-//                list.add(header2);
-//
-//            }
             }
         }
-
-
-
-
     }
 
     private void onSheduleItemClick(ScheduleItem scheduleItem) {

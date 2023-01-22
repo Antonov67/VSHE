@@ -40,6 +40,7 @@ public interface HseDao {
     @Query("SELECT * FROM 'time_table'")
     LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacher();
 
+   //запрос по дате и id группы
     @Transaction
     @Query("SELECT * FROM 'time_table' WHERE group_id = :group AND :date >= time_start AND :date <= time_end")
     LiveData<List<TimeTableWithTeacherEntity>> getTimetableTeacherByDateAndGroupID(Date date, int group);
